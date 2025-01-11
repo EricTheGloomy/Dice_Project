@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    private List<IManager> managers = new List<IManager>();
+
     public ResourceManager resourceManager;
     public DiceManager diceManager;
     public TurnManager turnManager;
@@ -9,24 +12,26 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
+        // Add all managers to the list
+        managers.Add(resourceManager);
+        managers.Add(diceManager);
+        managers.Add(turnManager);
+        managers.Add(gameEndManager);
+
         InitializeManagers();
     }
 
     private void InitializeManagers()
     {
-        Debug.Log("Initializing managers...");
-        resourceManager.InitializeResources();
-        turnManager.resourceManager = resourceManager;
-        turnManager.diceManager = diceManager;
-
-        // Initialize managers
-        diceManager.InitializeDicePool();
-        Debug.Log("Managers initialized.");
+        foreach (var manager in managers)
+        {
+            manager.Initialize();
+        }
     }
 
     private void Start()
     {
-        Debug.Log("Starting the game...");
+        Debug.Log("Game starting...");
         turnManager.StartTurn();
     }
 }

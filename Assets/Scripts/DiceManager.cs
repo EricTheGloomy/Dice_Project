@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceManager : MonoBehaviour
+public class DiceManager : MonoBehaviour, IManager
 {
     public GameObject dicePrefab;          // Prefab with an Image component
     public Transform diceUIContainer;     // UI container for dice
@@ -9,6 +9,12 @@ public class DiceManager : MonoBehaviour
     public DiceColorSO[] diceColors;      // Assign in Inspector (e.g., Red, Blue, Green)
 
     private List<Dice> dicePool;
+
+    public void Initialize()
+    {
+        InitializeDicePool();
+        Debug.Log("DiceManager initialized.");
+    }
 
     public void InitializeDicePool()
     {

@@ -1,12 +1,17 @@
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour
+public class TurnManager : MonoBehaviour, IManager
 {
     public ResourceManager resourceManager;
     public ResourceSO foodResource;
     public DiceManager diceManager;
 
     private int currentTurn;
+
+    public void Initialize()
+    {
+        Debug.Log("TurnManager initialized.");
+    }
 
     public void StartTurn()
     {

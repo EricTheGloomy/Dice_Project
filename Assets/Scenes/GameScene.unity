@@ -618,7 +618,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6e7df2e62c20eb646bf2b80d3a9189ed, type: 2}
   - {fileID: 11400000, guid: 2c14e1317543fe34fbed132109b5280e, type: 2}
   - {fileID: 11400000, guid: 1317607405a8b6d4e88b61eb93750104, type: 2}
-  diceColors: []
+  diceColors:
+  - {fileID: 11400000, guid: 122dd09f20ca5c54e9d30b69b96321f3, type: 2}
+  - {fileID: 11400000, guid: bd1c0ba80fc3ae048a0f4142aeb2e94d, type: 2}
+  - {fileID: 11400000, guid: 85547aa9be791b44c9b066d1b11c54b7, type: 2}
 --- !u!4 &1439532509
 Transform:
   m_ObjectHideFlags: 0

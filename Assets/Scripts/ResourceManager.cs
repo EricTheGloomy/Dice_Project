@@ -1,10 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager : MonoBehaviour
+public class ResourceManager : MonoBehaviour, IManager
 {
     public List<ResourceSO> resourceConfigurations; // Assign via Inspector
     private Dictionary<ResourceSO, Resource> resources;
+
+    public void Initialize()
+    {
+        InitializeResources();
+        Debug.Log("ResourceManager initialized.");
+    }
 
     public void InitializeResources()
     {

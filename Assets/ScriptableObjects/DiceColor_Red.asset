@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed4ed08e7dca15743b5d341c943fc4c3, type: 3}
   m_Name: DiceColor_Red
   m_EditorClassIdentifier: 
-  Name: 
+  Name: Red
   DisplayColor: {r: 1, g: 0, b: 0, a: 1}
   Icon: {fileID: 0}
