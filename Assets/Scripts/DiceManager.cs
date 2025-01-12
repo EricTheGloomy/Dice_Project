@@ -10,7 +10,7 @@ public class DiceManager : MonoBehaviour, IManager
     public DiceColorSO[] diceColors;          // Assign in Inspector (e.g., Red, Blue, Green)
 
     private Transform diceUIContainer;        // Dynamically instantiated container
-    private List<Dice> dicePool;
+    public List<Dice> dicePool;
 
     public void Initialize(GameController controller)
     {
@@ -68,7 +68,7 @@ public class DiceManager : MonoBehaviour, IManager
         Debug.Log($"Subtracted pip from dice: {dice.CurrentValue}");
     }
 
-    private void InstantiateDiceUI(Dice dice)
+    public void InstantiateDiceUI(Dice dice)
     {
         GameObject diceUI = Instantiate(dicePrefab, diceUIContainer);
 
@@ -79,7 +79,7 @@ public class DiceManager : MonoBehaviour, IManager
         dice.UIContainerObject = diceUI; // Store reference to update later
     }
 
-    private void UpdateDiceUI(Dice dice)
+    public void UpdateDiceUI(Dice dice)
     {
         if (dice.UIContainerObject != null)
         {

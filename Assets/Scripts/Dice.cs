@@ -14,6 +14,6 @@ public class Dice
     {
         LogicalColor = color;
         diceFaces = faces;
-        CurrentValue = 1; // Default value
+        CurrentValue = Random.Range(1, diceFaces.Length + 1);
     }
 }
