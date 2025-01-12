@@ -3,15 +3,21 @@ using UnityEngine;
 
 public class DiceManager : MonoBehaviour, IManager
 {
-    public GameObject dicePrefab;          // Prefab with an Image component
-    public Transform diceUIContainer;     // UI container for dice
-    public DiceFaceSO[] diceFaces;        // Assign in Inspector (set 6 faces)
-    public DiceColorSO[] diceColors;      // Assign in Inspector (e.g., Red, Blue, Green)
+    public GameObject dicePrefab;             // Prefab for individual dice
+    public GameObject diceUIContainerPrefab;  // Prefab for the dice UI container
+    public Canvas canvas;                     // Reference to the Canvas in the scene
+    public DiceFaceSO[] diceFaces;            // Assign in Inspector (set 6 faces)
+    public DiceColorSO[] diceColors;          // Assign in Inspector (e.g., Red, Blue, Green)
 
+    private Transform diceUIContainer;        // Dynamically instantiated container
     private List<Dice> dicePool;
 
     public void Initialize(GameController controller)
     {
+        // Instantiate the UI container under the Canvas
+        GameObject containerInstance = Instantiate(diceUIContainerPrefab, canvas.transform);
+        diceUIContainer = containerInstance.transform;
+
         InitializeDicePool();
         Debug.Log("DiceManager initialized.");
     }
@@ -37,10 +43,29 @@ public class DiceManager : MonoBehaviour, IManager
     {
         foreach (var dice in dicePool)
         {
-            dice.Roll();
-            UpdateDiceUI(dice);
-            Debug.Log($"Dice rolled: {dice.LogicalColor.Name} -> {dice.CurrentValue}");
+            RollDice(dice);
         }
+    }
+
+    public void RollDice(Dice dice)
+    {
+        dice.CurrentValue = Random.Range(1, diceFaces.Length + 1); // Roll between 1 and max faces
+        UpdateDiceUI(dice);
+        Debug.Log($"Dice rolled: {dice.LogicalColor.Name} -> {dice.CurrentValue}");
+    }
+
+    public void AddPip(Dice dice)
+    {
+        dice.CurrentValue = Mathf.Min(dice.CurrentValue + 1, diceFaces.Length); // Ensure it doesn’t exceed max faces
+        UpdateDiceUI(dice);
+        Debug.Log($"Added pip to dice: {dice.CurrentValue}");
+    }
+
+    public void SubtractPip(Dice dice)
+    {
+        dice.CurrentValue = Mathf.Max(dice.CurrentValue - 1, 1); // Ensure it doesn’t go below 1
+        UpdateDiceUI(dice);
+        Debug.Log($"Subtracted pip from dice: {dice.CurrentValue}");
     }
 
     private void InstantiateDiceUI(Dice dice)
