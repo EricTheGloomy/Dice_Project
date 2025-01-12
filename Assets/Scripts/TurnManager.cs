@@ -8,8 +8,10 @@ public class TurnManager : MonoBehaviour, IManager
 
     private int currentTurn;
 
-    public void Initialize()
+    public void Initialize(GameController controller)
     {
+        resourceManager = controller.resourceManager; // Retrieve dependency
+        diceManager = controller.diceManager;         // Retrieve dependency
         Debug.Log("TurnManager initialized.");
     }
 
@@ -17,11 +19,6 @@ public class TurnManager : MonoBehaviour, IManager
     {
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
-
-        //for testing purposes only - resources will not decrease on turn start in the game
-        resourceManager.DeductResource(foodResource, 1);
-        int foodValue = resourceManager.GetResourceValue(foodResource);
-        Debug.Log($"Food remaining: {foodValue}");
 
         diceManager.RollAllDice();
     }

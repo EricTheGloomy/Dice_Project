@@ -25,8 +25,10 @@ public class GameController : MonoBehaviour
     {
         foreach (var manager in managers)
         {
-            manager.Initialize();
+            manager.Initialize(this); // Pass GameController as the dependency container
         }
+
+        Debug.Log("All managers initialized with dependencies.");
     }
 
     private void Start()

@@ -10,7 +10,7 @@ public class DiceManager : MonoBehaviour, IManager
 
     private List<Dice> dicePool;
 
-    public void Initialize()
+    public void Initialize(GameController controller)
     {
         InitializeDicePool();
         Debug.Log("DiceManager initialized.");
