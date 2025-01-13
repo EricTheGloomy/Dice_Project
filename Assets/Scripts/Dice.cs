@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Dice
+public class Dice : IDice
 {
     public DiceColorSO LogicalColor { get; private set; }
     public int CurrentValue { get; set; } // State managed by DiceManager

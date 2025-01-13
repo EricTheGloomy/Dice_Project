@@ -561,6 +561,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 122dd09f20ca5c54e9d30b69b96321f3, type: 2}
   - {fileID: 11400000, guid: bd1c0ba80fc3ae048a0f4142aeb2e94d, type: 2}
   - {fileID: 11400000, guid: 85547aa9be791b44c9b066d1b11c54b7, type: 2}
+  startingDiceConfig: {fileID: 11400000, guid: e0c0df9b293e853489abed13a93f360a, type: 2}
 --- !u!4 &1439532509
 Transform:
   m_ObjectHideFlags: 0

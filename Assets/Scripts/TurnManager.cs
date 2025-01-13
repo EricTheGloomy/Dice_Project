@@ -10,8 +10,8 @@ public class TurnManager : MonoBehaviour, IManager
 
     public void Initialize(GameController controller)
     {
-        resourceManager = controller.resourceManager; // Retrieve dependency
-        diceManager = controller.diceManager;         // Retrieve dependency
+        resourceManager = controller.resourceManager;
+        diceManager = controller.diceManager;
         Debug.Log("TurnManager initialized.");
     }
 
@@ -36,20 +36,20 @@ public class TurnManager : MonoBehaviour, IManager
             Dice newDice = new Dice(diceManager.diceColors[0], diceManager.diceFaces);
             diceManager.dicePool.Add(newDice); // Add the new dice to the pool
             diceManager.InstantiateDiceUI(newDice); // Instantiate the UI for the new dice
-            diceManager.UpdateDiceUI(newDice);
+            diceManager.UpdateDiceUI(newDice); // Update the UI for the new dice
         }
         if(Input.GetKeyDown(KeyCode.O))
         {
             Dice newDice = new Dice(diceManager.diceColors[1], diceManager.diceFaces);
-            diceManager.dicePool.Add(newDice); // Add the new dice to the pool
-            diceManager.InstantiateDiceUI(newDice); // Instantiate the UI for the new dice
+            diceManager.dicePool.Add(newDice);
+            diceManager.InstantiateDiceUI(newDice);
             diceManager.UpdateDiceUI(newDice);
         }
         if(Input.GetKeyDown(KeyCode.I))
         {
             Dice newDice = new Dice(diceManager.diceColors[2], diceManager.diceFaces);
-            diceManager.dicePool.Add(newDice); // Add the new dice to the pool
-            diceManager.InstantiateDiceUI(newDice); // Instantiate the UI for the new dice
+            diceManager.dicePool.Add(newDice);
+            diceManager.InstantiateDiceUI(newDice);
             diceManager.UpdateDiceUI(newDice);
         }
         if(Input.GetKeyDown(KeyCode.U))

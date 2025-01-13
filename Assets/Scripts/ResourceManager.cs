@@ -3,14 +3,13 @@ using UnityEngine;
 
 public class ResourceManager : MonoBehaviour, IManager
 {
-    public List<ResourceSO> resourceConfigurations; // Assign via Inspector
+    public List<ResourceSO> resourceConfigurations;
     private Dictionary<ResourceSO, Resource> resources;
 
     public void Initialize(GameController controller)
     {
         InitializeResources();
         Debug.Log("ResourceManager initialized.");
-        // No dependencies in this example, but this pattern allows future expansion.
     }
 
     public void InitializeResources()

@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class DiceManager : MonoBehaviour, IManager
 {
-    public GameObject dicePrefab;             // Prefab for individual dice
-    public GameObject diceUIContainerPrefab;  // Prefab for the dice UI container
-    public Canvas canvas;                     // Reference to the Canvas in the scene
-    public DiceFaceSO[] diceFaces;            // Assign in Inspector (set 6 faces)
-    public DiceColorSO[] diceColors;          // Assign in Inspector (e.g., Red, Blue, Green)
+    public GameObject dicePrefab;
+    public GameObject diceUIContainerPrefab;
+    public Canvas canvas;
 
-    private Transform diceUIContainer;        // Dynamically instantiated container
+    public DiceFaceSO[] diceFaces;
+    public DiceColorSO[] diceColors;
+    public StartingDiceSO startingDiceConfig;
+
+    private Transform diceUIContainer;
     public List<Dice> dicePool;
 
     public void Initialize(GameController controller)
@@ -26,17 +28,18 @@ public class DiceManager : MonoBehaviour, IManager
     {
         dicePool = new List<Dice>();
 
-        foreach (var color in diceColors)
+        // Use StartingDiceSO to define dice pool
+        foreach (var entry in startingDiceConfig.startingDice)
         {
-            dicePool.Add(new Dice(color, diceFaces));
+            for (int i = 0; i < entry.count; i++)
+            {
+                var newDice = new Dice(entry.color, diceFaces);
+                dicePool.Add(newDice);
+                InstantiateDiceUI(newDice);
+            }
         }
 
-        foreach (var dice in dicePool)
-        {
-            InstantiateDiceUI(dice);
-        }
-
-        Debug.Log("Dice pool initialized.");
+        Debug.Log($"Dice pool initialized with {dicePool.Count} dice.");
     }
 
     public void RollAllDice()
