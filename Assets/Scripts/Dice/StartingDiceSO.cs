@@ -11,4 +11,5 @@ public class StartingDiceEntry
 {
     public DiceColor colorEnum; // Enum for safe referencing
     public int count;           // Number of dice to create with this color
+    public bool isPermanent;
 }

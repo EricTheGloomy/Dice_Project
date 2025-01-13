@@ -8,12 +8,15 @@ public class Dice : IDice
 
     public GameObject UIContainerObject { get; set; } // Reference to UI element
 
+    public bool IsPermanent { get; private set; }
+
     private DiceFaceSO[] diceFaces;
 
-    public Dice(DiceColorSO color, DiceFaceSO[] faces)
+    public Dice(DiceColorSO color, DiceFaceSO[] faces, bool isPermanent = false)
     {
         LogicalColor = color;
         diceFaces = faces;
         CurrentValue = Random.Range(1, diceFaces.Length + 1);
+        IsPermanent = isPermanent;
     }
 }

@@ -15,7 +15,10 @@ MonoBehaviour:
   startingDice:
   - colorEnum: 0
     count: 2
+    isPermanent: 1
   - colorEnum: 1
     count: 1
+    isPermanent: 1
   - colorEnum: 3
     count: 1
+    isPermanent: 1

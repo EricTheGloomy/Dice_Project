@@ -15,6 +15,7 @@ public class DiceManager : MonoBehaviour, IManager
     private Transform diceUIContainer;
     private Dictionary<DiceColor, DiceColorSO> colorLookup; // Mapping enum to SO
     public List<Dice> dicePool;
+    private List<Dice> tempDicePool = new List<Dice>();
 
 
     public void Initialize(GameController controller)
@@ -67,7 +68,7 @@ public class DiceManager : MonoBehaviour, IManager
 
             for (int i = 0; i < entry.count; i++)
             {
-                var newDice = new Dice(colorSO, diceFaces);
+                var newDice = new Dice(colorSO, diceFaces, entry.isPermanent); // Pass isPermanent flag
                 dicePool.Add(newDice);
                 InstantiateDiceUI(newDice);
             }
@@ -144,6 +145,45 @@ public class DiceManager : MonoBehaviour, IManager
         {
             Debug.LogWarning("UIContainerObject is null for this dice.");
         }
+    }
+
+    public void AddDice(DiceColorSO color, bool isPermanent)
+    {
+        var newDice = new Dice(color, diceFaces, isPermanent);
+        dicePool.Add(newDice);
+
+        if (!isPermanent)
+        {
+            tempDicePool.Add(newDice);
+        }
+
+        InstantiateDiceUI(newDice);
+        UpdateDiceUI(newDice);
+    }
+    
+    public void AddDiceWithFaceValue(DiceColorSO color, bool isPermanent, int startingFaceValue)
+    {
+        var newDice = new Dice(color, diceFaces, isPermanent);
+        newDice.CurrentValue = Mathf.Clamp(startingFaceValue, 1, diceFaces.Length);
+        dicePool.Add(newDice);
+        if (!isPermanent)
+        {
+            tempDicePool.Add(newDice);
+        }
+        InstantiateDiceUI(newDice);
+        UpdateDiceUI(newDice);
+    }
+
+    public void ClearTemporaryDice()
+    {
+        foreach (var dice in tempDicePool)
+        {
+            Destroy(dice.UIContainerObject); // Remove UI
+            dicePool.Remove(dice);           // Remove from main pool
+        }
+
+        tempDicePool.Clear();
+        Debug.Log("Temporary dice cleared.");
     }
 
 }
