@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: StartingDiceConfig
   m_EditorClassIdentifier: 
   startingDice:
-  - color: {fileID: 11400000, guid: 122dd09f20ca5c54e9d30b69b96321f3, type: 2}
+  - colorEnum: 0
     count: 2
-  - color: {fileID: 11400000, guid: 85547aa9be791b44c9b066d1b11c54b7, type: 2}
+  - colorEnum: 1
     count: 1
-  - color: {fileID: 11400000, guid: bd1c0ba80fc3ae048a0f4142aeb2e94d, type: 2}
+  - colorEnum: 3
     count: 1

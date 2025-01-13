@@ -29,32 +29,39 @@ public class TurnManager : MonoBehaviour, IManager
     }
 
 //TESTING PURPOSES ONLY
-    private void Update() 
+    private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            Dice newDice = new Dice(diceManager.diceColors[0], diceManager.diceFaces);
-            diceManager.dicePool.Add(newDice); // Add the new dice to the pool
-            diceManager.InstantiateDiceUI(newDice); // Instantiate the UI for the new dice
-            diceManager.UpdateDiceUI(newDice); // Update the UI for the new dice
+            AddDice(DiceColor.Red);
         }
-        if(Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            Dice newDice = new Dice(diceManager.diceColors[1], diceManager.diceFaces);
-            diceManager.dicePool.Add(newDice);
-            diceManager.InstantiateDiceUI(newDice);
-            diceManager.UpdateDiceUI(newDice);
+            AddDice(DiceColor.White);
         }
-        if(Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            Dice newDice = new Dice(diceManager.diceColors[2], diceManager.diceFaces);
-            diceManager.dicePool.Add(newDice);
-            diceManager.InstantiateDiceUI(newDice);
-            diceManager.UpdateDiceUI(newDice);
+            AddDice(DiceColor.Green);
         }
-        if(Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U))
         {
             diceManager.RollAllDice();
+        }
+    }
+
+    private void AddDice(DiceColor color)
+    {
+        var colorSO = diceManager.GetColor(color);
+        if (colorSO != null)
+        {
+            var newDice = new Dice(colorSO, diceManager.diceFaces);
+            diceManager.dicePool.Add(newDice);
+            diceManager.InstantiateDiceUI(newDice);
+            diceManager.UpdateDiceUI(newDice);
+        }
+        else
+        {
+            Debug.LogWarning($"Color {color} not found in DiceManager.");
         }
     }
 }

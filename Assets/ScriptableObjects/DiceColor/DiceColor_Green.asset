@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed4ed08e7dca15743b5d341c943fc4c3, type: 3}
   m_Name: DiceColor_Green
   m_EditorClassIdentifier: 
+  ColorEnum: 3
   Name: Green
   DisplayColor: {r: 0, g: 1, b: 0, a: 1}
   Icon: {fileID: 0}

@@ -12,6 +12,7 @@ public class DiceManager : MonoBehaviour, IManager
     public StartingDiceSO startingDiceConfig;
 
     private Transform diceUIContainer;
+    private Dictionary<DiceColor, DiceColorSO> colorLookup; // Mapping enum to SO
     public List<Dice> dicePool;
 
     public void Initialize(GameController controller)
@@ -20,20 +21,51 @@ public class DiceManager : MonoBehaviour, IManager
         GameObject containerInstance = Instantiate(diceUIContainerPrefab, canvas.transform);
         diceUIContainer = containerInstance.transform;
 
+        InitializeColorLookup();
         InitializeDicePool();
         Debug.Log("DiceManager initialized.");
     }
 
+    private void InitializeColorLookup()
+    {
+        colorLookup = new Dictionary<DiceColor, DiceColorSO>();
+
+        foreach (var colorSO in diceColors)
+        {
+            colorLookup[colorSO.ColorEnum] = colorSO;
+        }
+
+        Debug.Log("Color lookup dictionary initialized.");
+    }
+
+    public DiceColorSO GetColor(DiceColor color)
+    {
+        if (colorLookup.TryGetValue(color, out var colorSO))
+        {
+            return colorSO;
+        }
+
+        Debug.LogWarning($"Color {color} not found in colorLookup dictionary.");
+        return null;
+    }
+    
     public void InitializeDicePool()
     {
         dicePool = new List<Dice>();
 
-        // Use StartingDiceSO to define dice pool
         foreach (var entry in startingDiceConfig.startingDice)
         {
+            if (!colorLookup.ContainsKey(entry.colorEnum))
+            {
+                Debug.LogWarning($"No DiceColorSO found for {entry.colorEnum}");
+                continue;
+            }
+
+            var colorSO = colorLookup[entry.colorEnum];
+
             for (int i = 0; i < entry.count; i++)
             {
-                var newDice = new Dice(entry.color, diceFaces);
+                var newDice = new Dice(colorSO, diceFaces);
                 dicePool.Add(newDice);
                 InstantiateDiceUI(newDice);
             }
