@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DiceManager : MonoBehaviour, IManager
 {
@@ -14,6 +15,7 @@ public class DiceManager : MonoBehaviour, IManager
     private Transform diceUIContainer;
     private Dictionary<DiceColor, DiceColorSO> colorLookup; // Mapping enum to SO
     public List<Dice> dicePool;
+
 
     public void Initialize(GameController controller)
     {
@@ -107,9 +109,17 @@ public class DiceManager : MonoBehaviour, IManager
     {
         GameObject diceUI = Instantiate(dicePrefab, diceUIContainer);
 
-        // Set sprite or color based on DiceColorSO
-        var image = diceUI.GetComponentInChildren<UnityEngine.UI.Image>();
-        image.color = dice.LogicalColor.DisplayColor;
+        // Use the helper script to access the Image
+        var diceUIComponent = diceUI.GetComponent<DiceUI>();
+
+        if (diceUIComponent != null && diceUIComponent.faceImage != null)
+        {
+            diceUIComponent.faceImage.color = dice.LogicalColor.DisplayColor;
+        }
+        else
+        {
+            Debug.LogWarning("DiceUI component or faceImage not set up correctly in prefab.");
+        }
 
         dice.UIContainerObject = diceUI; // Store reference to update later
     }
@@ -118,8 +128,22 @@ public class DiceManager : MonoBehaviour, IManager
     {
         if (dice.UIContainerObject != null)
         {
-            var image = dice.UIContainerObject.GetComponentInChildren<UnityEngine.UI.Image>();
-            image.sprite = dice.CurrentSprite;
+            // Use the DiceUI helper script to access the Image component
+            var diceUIComponent = dice.UIContainerObject.GetComponent<DiceUI>();
+
+            if (diceUIComponent != null && diceUIComponent.faceImage != null)
+            {
+                diceUIComponent.faceImage.sprite = dice.CurrentSprite; // Update the sprite
+            }
+            else
+            {
+                Debug.LogWarning("DiceUI component or faceImage not set up correctly on this dice.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("UIContainerObject is null for this dice.");
         }
     }
+
 }
