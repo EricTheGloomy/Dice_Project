@@ -174,6 +174,20 @@ public class DiceManager : MonoBehaviour, IManager
         UpdateDiceUI(newDice);
     }
 
+    public void ModifyPips(System.Func<Dice, bool> filter, int pipChange)
+    {
+        // Convert Func to Predicate
+        var targetDice = dicePool.FindAll(new System.Predicate<Dice>(filter));
+
+        foreach (var dice in targetDice)
+        {
+            dice.CurrentValue = Mathf.Clamp(dice.CurrentValue + pipChange, 1, diceFaces.Length);
+            UpdateDiceUI(dice);
+        }
+
+        Debug.Log($"Modified pips by {pipChange} for {targetDice.Count} dice.");
+    }
+
     public void ClearTemporaryDice()
     {
         foreach (var dice in tempDicePool)
