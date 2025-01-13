@@ -96,7 +96,7 @@ public class TurnManager : MonoBehaviour, IManager
             if (diceOfColor.Count > 0)
             {
                 var randomDice = diceOfColor[Random.Range(0, diceOfColor.Count)];
-                diceManager.ModifyPips(dice => dice == randomDice, 1); // Add 1 pip to a random red dice
+                diceManager.ModifyPips(dice => dice == randomDice, 3); // Add 1 pip to a random red dice
             }
         }
         if (Input.GetKeyDown(KeyCode.S))
@@ -106,7 +106,27 @@ public class TurnManager : MonoBehaviour, IManager
             if (diceOfColor.Count > 0)
             {
                 var randomDice = diceOfColor[Random.Range(0, diceOfColor.Count)];
-                diceManager.ModifyPips(dice => dice == randomDice, -1); // Remove 1 pip from a random green dice
+                diceManager.ModifyPips(dice => dice == randomDice, -3); // Remove 1 pip from a random green dice
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Z)) // Test +3
+        {
+            int pipChange = 3; // Change this to -3 for testing negatives
+            var redColorSO = diceManager.GetColor(DiceColor.Red);
+            var eligibleDice = diceManager.dicePool.FindAll(dice =>
+                dice.LogicalColor == redColorSO && // Match color
+                !(dice.CurrentValue == diceManager.diceFaces.Length && pipChange > 0) && // Exclude 6 for +
+                !(dice.CurrentValue == 1 && pipChange < 0) // Exclude 1 for -
+            );
+
+            if (eligibleDice.Count > 0)
+            {
+                var randomDice = eligibleDice[Random.Range(0, eligibleDice.Count)];
+                diceManager.ModifyPips(dice => dice == randomDice, pipChange);
+            }
+            else
+            {
+                Debug.LogWarning($"No eligible red dice for {pipChange:+#;-#;0}.");
             }
         }
 

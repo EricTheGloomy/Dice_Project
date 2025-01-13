@@ -176,9 +176,29 @@ public class DiceManager : MonoBehaviour, IManager
 
     public void ModifyPips(System.Func<Dice, bool> filter, int pipChange)
     {
-        // Convert Func to Predicate
-        var targetDice = dicePool.FindAll(new System.Predicate<Dice>(filter));
+        // Filter dice that match the criteria and can be safely modified
+        var targetDice = dicePool.FindAll(new System.Predicate<Dice>(dice =>
+        {
+            // Apply the filter provided
+            if (!filter(dice))
+            {
+                return false; // Skip dice that don't match the filter
+            }
 
+            // Check if the dice can handle the pip change
+            if (pipChange < 0) // Negative change
+            {
+                return dice.CurrentValue > 1; // Exclude dice already at 1
+            }
+            else if (pipChange > 0) // Positive change
+            {
+                return dice.CurrentValue < diceFaces.Length; // Exclude dice already at max
+            }
+
+            return false; // If pipChange is 0, do nothing
+        }));
+
+        // Modify each valid dice
         foreach (var dice in targetDice)
         {
             dice.CurrentValue = Mathf.Clamp(dice.CurrentValue + pipChange, 1, diceFaces.Length);
