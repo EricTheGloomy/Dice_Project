@@ -8,12 +8,19 @@ public class UIManager : MonoBehaviour, IManager
     public GameObject diceUIContainerPrefab;
     public Canvas canvas;
 
+    public Button rollDiceButton;
+    public Button endTurnButton;
+
     private Transform diceUIContainer;
 
     public void Initialize(GameController controller)
     {
         GameObject containerInstance = Instantiate(diceUIContainerPrefab, canvas.transform);
         diceUIContainer = containerInstance.transform;
+
+        rollDiceButton.onClick.AddListener(controller.diceManager.RollAllDice);
+        endTurnButton.onClick.AddListener(controller.turnManager.EndTurn);
+
         Debug.Log("UIManager initialized.");
     }
 
