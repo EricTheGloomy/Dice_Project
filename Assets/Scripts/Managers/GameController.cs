@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     public UIManager uiManager;
     public ResourceManager resourceManager;
     public DiceManager diceManager;
+    public DicePoolManager dicePoolManager;
     public TurnManager turnManager;
     public GameEndManager gameEndManager;
 
@@ -17,6 +18,7 @@ public class GameController : MonoBehaviour
         managers.Add(uiManager);
         managers.Add(resourceManager);
         managers.Add(diceManager);
+        managers.Add(dicePoolManager);
         managers.Add(turnManager);
         managers.Add(gameEndManager);
 

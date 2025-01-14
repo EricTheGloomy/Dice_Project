@@ -9,15 +9,11 @@ public class DiceManager : MonoBehaviour, IManager
 
     private UIManager uiManager;
     private Dictionary<DiceColor, DiceColorSO> colorLookup;
-    public List<Dice> dicePool;
-    private List<Dice> tempDicePool = new List<Dice>();
 
     public void Initialize(GameController controller)
     {
         uiManager = controller.uiManager;
-
         InitializeColorLookup();
-        InitializeDicePool();
         Debug.Log("DiceManager initialized.");
     }
 
@@ -41,37 +37,9 @@ public class DiceManager : MonoBehaviour, IManager
         return null;
     }
 
-    private void InitializeDicePool()
+    public Dice CreateDice(DiceColorSO color, bool isPermanent)
     {
-        dicePool = new List<Dice>();
-
-        foreach (var entry in startingDiceConfig.startingDice)
-        {
-            if (!colorLookup.ContainsKey(entry.colorEnum))
-            {
-                Debug.LogWarning($"No DiceColorSO found for {entry.colorEnum}");
-                continue;
-            }
-
-            var colorSO = colorLookup[entry.colorEnum];
-            for (int i = 0; i < entry.count; i++)
-            {
-                var newDice = new Dice(colorSO, diceFaces, entry.isPermanent);
-                dicePool.Add(newDice);
-
-                // Delegate UI creation to UIManager
-                var diceUI = uiManager.CreateDiceUI(newDice);
-                newDice.UIContainerObject = diceUI;
-            }
-        }
-    }
-
-    public void RollAllDice()
-    {
-        foreach (var dice in dicePool)
-        {
-            RollDice(dice);
-        }
+        return new Dice(color, diceFaces, isPermanent);
     }
 
     public void RollDice(Dice dice)
@@ -80,70 +48,11 @@ public class DiceManager : MonoBehaviour, IManager
         uiManager.UpdateDiceUI(dice.UIContainerObject, dice.CurrentSprite);
     }
 
-    public void AddPip(Dice dice)
+    public void RollAllDice(List<Dice> diceList)
     {
-        dice.CurrentValue = Mathf.Min(dice.CurrentValue + 1, diceFaces.Length);
-        uiManager.UpdateDiceUI(dice.UIContainerObject, dice.CurrentSprite);
-        Debug.Log($"Added pip to dice: {dice.CurrentValue}");
-    }
-
-    public void SubtractPip(Dice dice)
-    {
-        dice.CurrentValue = Mathf.Max(dice.CurrentValue - 1, 1);
-        uiManager.UpdateDiceUI(dice.UIContainerObject, dice.CurrentSprite);
-        Debug.Log($"Subtracted pip from dice: {dice.CurrentValue}");
-    }
-
-    public void AddDice(DiceColorSO color, bool isPermanent)
-    {
-        var newDice = new Dice(color, diceFaces, isPermanent);
-        dicePool.Add(newDice);
-        if (!isPermanent)
+        foreach (var dice in diceList)
         {
-            tempDicePool.Add(newDice);
+            RollDice(dice);
         }
-
-        var diceUI = uiManager.CreateDiceUI(newDice);
-        newDice.UIContainerObject = diceUI;
-        uiManager.UpdateDiceUI(diceUI, newDice.CurrentSprite);
-    }
-
-    public void AddDiceWithFaceValue(DiceColorSO color, bool isPermanent, int startingFaceValue)
-    {
-        var newDice = new Dice(color, diceFaces, isPermanent);
-        newDice.CurrentValue = Mathf.Clamp(startingFaceValue, 1, diceFaces.Length);
-        dicePool.Add(newDice);
-        if (!isPermanent)
-        {
-            tempDicePool.Add(newDice);
-        }
-
-        var diceUI = uiManager.CreateDiceUI(newDice);
-        newDice.UIContainerObject = diceUI;
-        uiManager.UpdateDiceUI(diceUI, newDice.CurrentSprite);
-    }
-
-    public void ModifyPips(System.Func<Dice, bool> filter, int pipChange)
-    {
-        var targetDice = dicePool.FindAll(dice => filter(dice));
-
-        foreach (var dice in targetDice)
-        {
-            dice.CurrentValue = Mathf.Clamp(dice.CurrentValue + pipChange, 1, diceFaces.Length);
-            uiManager.UpdateDiceUI(dice.UIContainerObject, dice.CurrentSprite);
-        }
-
-        Debug.Log($"Modified pips by {pipChange} for {targetDice.Count} dice.");
-    }
-
-    public void ClearTemporaryDice()
-    {
-        uiManager.ClearDiceUI(tempDicePool);
-        foreach (var dice in tempDicePool)
-        {
-            dicePool.Remove(dice);
-        }
-        tempDicePool.Clear();
-        Debug.Log("Temporary dice cleared.");
     }
 }

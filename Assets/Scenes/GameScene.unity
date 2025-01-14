@@ -154,6 +154,7 @@ MonoBehaviour:
   uiManager: {fileID: 2116887348}
   resourceManager: {fileID: 1844178578}
   diceManager: {fileID: 1439532508}
+  dicePoolManager: {fileID: 839383086}
   turnManager: {fileID: 865583327}
   gameEndManager: {fileID: 2061546798}
 --- !u!4 &149294878
@@ -172,6 +173,7 @@ Transform:
   - {fileID: 2116887347}
   - {fileID: 1844178579}
   - {fileID: 1439532509}
+  - {fileID: 839383087}
   - {fileID: 865583328}
   - {fileID: 2061546799}
   m_Father: {fileID: 0}
@@ -440,6 +442,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &839383085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 839383087}
+  - component: {fileID: 839383086}
+  m_Layer: 0
+  m_Name: DicePoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &839383086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839383085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c664338ce0e71e04883deee6de72a10d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &839383087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839383085}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 149294878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &865583326
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,6 +518,7 @@ MonoBehaviour:
   resourceManager: {fileID: 1844178578}
   foodResource: {fileID: 11400000, guid: 8870eda49538dfb49a4ff4eb464e9443, type: 2}
   diceManager: {fileID: 1439532508}
+  dicePoolManager: {fileID: 0}
 --- !u!4 &865583328
 Transform:
   m_ObjectHideFlags: 0

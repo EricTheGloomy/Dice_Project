@@ -5,6 +5,7 @@ public class TurnManager : MonoBehaviour, IManager
     public ResourceManager resourceManager;
     public ResourceSO foodResource;
     public DiceManager diceManager;
+    public DicePoolManager dicePoolManager;
 
     private int currentTurn;
 
@@ -12,6 +13,7 @@ public class TurnManager : MonoBehaviour, IManager
     {
         resourceManager = controller.resourceManager;
         diceManager = controller.diceManager;
+        dicePoolManager = controller.dicePoolManager;
         Debug.Log("TurnManager initialized.");
     }
 
@@ -20,12 +22,12 @@ public class TurnManager : MonoBehaviour, IManager
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
 
-        diceManager.RollAllDice();
+        dicePoolManager.RollAllDice();
     }
 
     public void EndTurn()
     {
-        diceManager.ClearTemporaryDice();
+        dicePoolManager.ClearTemporaryDice();
         Debug.Log($"Turn {currentTurn} ended.");
     }
 
@@ -38,7 +40,7 @@ public class TurnManager : MonoBehaviour, IManager
             if (colorSO != null)
             {
                 //diceManager.AddDice(colorSO, false);
-                diceManager.AddDiceWithFaceValue(colorSO, false, 6);
+                dicePoolManager.AddDiceWithFaceValue(colorSO, false, 6);
             }
         }
         if (Input.GetKeyDown(KeyCode.O))
@@ -47,7 +49,7 @@ public class TurnManager : MonoBehaviour, IManager
             if (colorSO != null)
             {
                 //diceManager.AddDice(colorSO, false);
-                diceManager.AddDiceWithFaceValue(colorSO, false, 2);
+                dicePoolManager.AddDiceWithFaceValue(colorSO, false, 2);
             }
         }
         if (Input.GetKeyDown(KeyCode.I))
@@ -56,64 +58,64 @@ public class TurnManager : MonoBehaviour, IManager
             if (colorSO != null)
             {
                 //diceManager.AddDice(colorSO, false);
-                diceManager.AddDiceWithFaceValue(colorSO, false, 4);
+                dicePoolManager.AddDiceWithFaceValue(colorSO, false, 4);
             }
         }
 
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            diceManager.ModifyPips(dice => true, 1); // Add 1 pip to all dice
+            dicePoolManager.ModifyPips(dice => true, 1); // Add 1 pip to all dice
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-           diceManager.ModifyPips(dice => true, -1); // Remove 1 pip from all dice 
+           dicePoolManager.ModifyPips(dice => true, -1); // Remove 1 pip from all dice 
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
             var redColorSO = diceManager.GetColor(DiceColor.Red);
-            diceManager.ModifyPips(dice => dice.LogicalColor == redColorSO, 1); // Add 1 pip to all red dice
+            dicePoolManager.ModifyPips(dice => dice.LogicalColor == redColorSO, 1); // Add 1 pip to all red dice
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
             var greenColorSO = diceManager.GetColor(DiceColor.Green);
-            diceManager.ModifyPips(dice => dice.LogicalColor == greenColorSO, -1); // Remove 1 pip from all green dice
+            dicePoolManager.ModifyPips(dice => dice.LogicalColor == greenColorSO, -1); // Remove 1 pip from all green dice
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            var randomDice = diceManager.dicePool[Random.Range(0, diceManager.dicePool.Count)];
-            diceManager.ModifyPips(dice => dice == randomDice, 1); // Add 1 pip to a random dice
+            var randomDice = dicePoolManager.dicePool[Random.Range(0, dicePoolManager.dicePool.Count)];
+            dicePoolManager.ModifyPips(dice => dice == randomDice, 1); // Add 1 pip to a random dice
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            var randomDice = diceManager.dicePool[Random.Range(0, diceManager.dicePool.Count)];
-            diceManager.ModifyPips(dice => dice == randomDice, -1); // Remove 1 pip from a random dice
+            var randomDice = dicePoolManager.dicePool[Random.Range(0, dicePoolManager.dicePool.Count)];
+            dicePoolManager.ModifyPips(dice => dice == randomDice, -1); // Remove 1 pip from a random dice
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             var redColorSO = diceManager.GetColor(DiceColor.Red);
-            var diceOfColor = diceManager.dicePool.FindAll(dice => dice.LogicalColor == redColorSO);
+            var diceOfColor = dicePoolManager.dicePool.FindAll(dice => dice.LogicalColor == redColorSO);
             if (diceOfColor.Count > 0)
             {
                 var randomDice = diceOfColor[Random.Range(0, diceOfColor.Count)];
-                diceManager.ModifyPips(dice => dice == randomDice, 3); // Add 1 pip to a random red dice
+                dicePoolManager.ModifyPips(dice => dice == randomDice, 3); // Add 1 pip to a random red dice
             }
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             var greenColorSO = diceManager.GetColor(DiceColor.Green);
-            var diceOfColor = diceManager.dicePool.FindAll(dice => dice.LogicalColor == greenColorSO);
+            var diceOfColor = dicePoolManager.dicePool.FindAll(dice => dice.LogicalColor == greenColorSO);
             if (diceOfColor.Count > 0)
             {
                 var randomDice = diceOfColor[Random.Range(0, diceOfColor.Count)];
-                diceManager.ModifyPips(dice => dice == randomDice, -3); // Remove 1 pip from a random green dice
+                dicePoolManager.ModifyPips(dice => dice == randomDice, -3); // Remove 1 pip from a random green dice
             }
         }
         if (Input.GetKeyDown(KeyCode.Z)) // Test +3
         {
             int pipChange = 3; // Change this to -3 for testing negatives
             var redColorSO = diceManager.GetColor(DiceColor.Red);
-            var eligibleDice = diceManager.dicePool.FindAll(dice =>
+            var eligibleDice = dicePoolManager.dicePool.FindAll(dice =>
                 dice.LogicalColor == redColorSO && // Match color
                 !(dice.CurrentValue == diceManager.diceFaces.Length && pipChange > 0) && // Exclude 6 for +
                 !(dice.CurrentValue == 1 && pipChange < 0) // Exclude 1 for -
@@ -122,7 +124,7 @@ public class TurnManager : MonoBehaviour, IManager
             if (eligibleDice.Count > 0)
             {
                 var randomDice = eligibleDice[Random.Range(0, eligibleDice.Count)];
-                diceManager.ModifyPips(dice => dice == randomDice, pipChange);
+                dicePoolManager.ModifyPips(dice => dice == randomDice, pipChange);
             }
             else
             {
@@ -133,7 +135,7 @@ public class TurnManager : MonoBehaviour, IManager
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            diceManager.RollAllDice();
+            dicePoolManager.RollAllDice();
         }
         if(Input.GetKeyDown(KeyCode.M))
         {

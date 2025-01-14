@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour, IManager
         GameObject containerInstance = Instantiate(diceUIContainerPrefab, canvas.transform);
         diceUIContainer = containerInstance.transform;
 
-        rollDiceButton.onClick.AddListener(controller.diceManager.RollAllDice);
+        rollDiceButton.onClick.AddListener(controller.dicePoolManager.RollAllDice);
         endTurnButton.onClick.AddListener(controller.turnManager.EndTurn);
 
         Debug.Log("UIManager initialized.");
