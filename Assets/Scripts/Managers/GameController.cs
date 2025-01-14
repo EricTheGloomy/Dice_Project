@@ -5,6 +5,7 @@ public class GameController : MonoBehaviour
 {
     private List<IManager> managers = new List<IManager>();
 
+    public UIManager uiManager;
     public ResourceManager resourceManager;
     public DiceManager diceManager;
     public TurnManager turnManager;
@@ -13,6 +14,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         // Add all managers to the list
+        managers.Add(uiManager);
         managers.Add(resourceManager);
         managers.Add(diceManager);
         managers.Add(turnManager);

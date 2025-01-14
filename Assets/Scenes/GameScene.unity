@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d213a9afbbd44478357d8ec0878747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManager: {fileID: 2116887348}
   resourceManager: {fileID: 1844178578}
   diceManager: {fileID: 1439532508}
   turnManager: {fileID: 865583327}
@@ -168,6 +169,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2116887347}
   - {fileID: 1844178579}
   - {fileID: 1439532509}
   - {fileID: 865583328}
@@ -547,9 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe3ab65877334e4198629ab919deea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dicePrefab: {fileID: 7594237827765415959, guid: 60e37ff38eadfa448bff5a2e760914d1, type: 3}
-  diceUIContainerPrefab: {fileID: 3766643751513476615, guid: a5a018ade39ede24cb44bbd261f6b4e8, type: 3}
-  canvas: {fileID: 1549552528}
   diceFaces:
   - {fileID: 11400000, guid: 165a8737e4b43364f948f8e328455ef8, type: 2}
   - {fileID: 11400000, guid: b12140cfd0e5caf4dbf8e224bfda1f42, type: 2}
@@ -840,6 +839,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 149294878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2116887346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116887347}
+  - component: {fileID: 2116887348}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2116887347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116887346}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 149294878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2116887348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116887346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1463236aaec92ed48a45acf9a81f3641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dicePrefab: {fileID: 7594237827765415959, guid: 60e37ff38eadfa448bff5a2e760914d1, type: 3}
+  diceUIContainerPrefab: {fileID: 3766643751513476615, guid: a5a018ade39ede24cb44bbd261f6b4e8, type: 3}
+  canvas: {fileID: 1549552528}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
