@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// A single ScriptableObject that handles dice slot restrictions in one place.
-/// Supports restrictions by color, by face value range, evens/odds, 
-/// single value, exclude value/color, and sum requirement.
-/// </summary>
 [CreateAssetMenu(fileName = "NewDiceSlotRestriction", menuName = "Dice/Slot Restriction")]
 public class DiceSlotRestrictionSO : ScriptableObject
 {
@@ -51,20 +46,13 @@ public class DiceSlotRestrictionSO : ScriptableObject
     [Tooltip("The required sum that the dice value should meet.")]
     public int requiredSum;
 
-    /// <summary>
-    /// Returns true if the dice meets all the enabled restrictions.
-    /// </summary>
-    /// <param name="dice">The data object for the dice we're testing.</param>
-    /// <returns>True if the dice is allowed, false otherwise.</returns>
     public bool CheckDice(Dice dice)
     {
-        // 0) If allowAnyDice is true, accept regardless of other restrictions.
         if (allowAnyDice)
         {
             return true;
         }
 
-        // 1) Check exclude color with an array of colors to exclude.
         if (excludeColor)
         {
             if (colorsToExclude != null && colorsToExclude.Length > 0)
@@ -73,24 +61,20 @@ public class DiceSlotRestrictionSO : ScriptableObject
                 {
                     if (dice.LogicalColor == color)
                     {
-                        // Dice color is in the exclusion list.
                         return false;
                     }
                 }
             }
             else
             {
-                // If excludeColor is enabled but no colors specified, reject all dice.
                 return false;
             }
         }
 
-        // 2) Check color restrictions.
         if (restrictByColor)
         {
             if (allowedColors == null || allowedColors.Length == 0)
             {
-                // No colors specified, fail the check.
                 return false;
             }
 
@@ -110,7 +94,6 @@ public class DiceSlotRestrictionSO : ScriptableObject
             }
         }
 
-        // 3) Check single value restriction.
         if (restrictToSingleValue)
         {
             if (dice.CurrentValue != requiredValue)
@@ -119,7 +102,6 @@ public class DiceSlotRestrictionSO : ScriptableObject
             }
         }
 
-        // 4) Check exclude value.
         if (excludeValue)
         {
             if (dice.CurrentValue == valueToExclude)
@@ -128,7 +110,6 @@ public class DiceSlotRestrictionSO : ScriptableObject
             }
         }
 
-        // 5) Check face value range.
         if (restrictByValueRange)
         {
             if (dice.CurrentValue < minValue || dice.CurrentValue > maxValue)
@@ -137,10 +118,8 @@ public class DiceSlotRestrictionSO : ScriptableObject
             }
         }
 
-        // 6) Check even/odd only.
         if (allowEvensOnly && allowOddsOnly)
         {
-            // Contradictory; no dice can be both even and odd.
             return false;
         }
         if (allowEvensOnly && (dice.CurrentValue % 2 != 0))
@@ -152,7 +131,6 @@ public class DiceSlotRestrictionSO : ScriptableObject
             return false;
         }
 
-        // If all checks passed, the dice is allowed.
         return true;
     }
 }

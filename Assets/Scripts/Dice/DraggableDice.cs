@@ -2,10 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// DraggableDice is responsible for dragging the dice around
-/// and deciding where it should go when dropped.
-/// </summary>
 public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private RectTransform rectTransform; 
@@ -15,7 +11,6 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private Transform originalParent;  // The parent where the dice starts
     [SerializeField] private Vector2 originalPosition;  // The position where the dice starts
     
-    // Reference to the slot the dice is currently in (if any)
     private DiceSlot currentSlot;
 
     private void Awake()
@@ -30,7 +25,6 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Remove from current slot (if we were already in one)
         if (currentSlot != null)
         {
             currentSlot.ClearSlot();
@@ -40,20 +34,17 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Move to the top canvas so that it can be dragged over UI
         transform.SetParent(canvas.transform, true);
 
-        // Make the dice a bit transparent while dragging and ignore raycasts
         canvasGroup.alpha = 0.9f;
         canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Update position based on pointer movement, adjusted by scaleFactor
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Restore full visibility and allow raycasts again
         canvasGroup.alpha = 1.0f;
         canvasGroup.blocksRaycasts = true;
 
@@ -67,16 +58,14 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             Debug.Log($"Hit: {result.gameObject.name}");
         }
 
-        // Look for a DiceSlot in the raycast results
         DiceSlot slot = null;
         foreach (var result in raycastResults)
         {
             slot = result.gameObject.GetComponent<DiceSlot>();
             if (slot != null)
-                break; // Stop at the first valid DiceSlot
+                break;
         }
 
-        // If we found a DiceSlot that is currently empty...
         if (slot != null && slot.IsEmpty)
         {
             Debug.Log("Valid empty slot found, attempting to assign dice.");
@@ -84,7 +73,7 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (assigned)
             {
                 Debug.Log("Assignment successful.");
-                currentSlot = slot; // Keep track of our new home
+                currentSlot = slot;
             }
             else
             {
@@ -99,9 +88,6 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
-    /// <summary>
-    /// Resets the dice to its original parent and position.
-    /// </summary>
     private void ResetToOriginalParent()
     {
         transform.SetParent(originalParent, true);

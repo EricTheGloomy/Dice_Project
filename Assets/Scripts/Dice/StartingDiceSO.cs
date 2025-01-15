@@ -9,7 +9,7 @@ public class StartingDiceSO : ScriptableObject
 [System.Serializable]
 public class StartingDiceEntry
 {
-    public DiceColor colorEnum; // Enum for safe referencing
-    public int count;           // Number of dice to create with this color
+    public DiceColor colorEnum;
+    public int count;
     public bool isPermanent;
 }

@@ -24,7 +24,6 @@ public class UIManager : MonoBehaviour, IManager
         Debug.Log("UIManager initialized.");
     }
 
-    // Create and link a Dice UI element to a Dice
     public GameObject CreateDiceUI(Dice dice)
     {
         GameObject diceUI = Instantiate(dicePrefab, diceUIContainer);
@@ -47,7 +46,6 @@ public class UIManager : MonoBehaviour, IManager
         return diceUI;
     }
 
-    // Update the Dice UI to reflect the current state of the Dice
     public void UpdateDiceUI(GameObject diceUIObject, Sprite faceSprite)
     {
         if (diceUIObject != null)
@@ -68,7 +66,6 @@ public class UIManager : MonoBehaviour, IManager
         }
     }
 
-    // Clear and destroy UI for temporary dice
     public void ClearDiceUI(List<Dice> tempDicePool)
     {
         foreach (var dice in tempDicePool)

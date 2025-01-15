@@ -4,7 +4,7 @@ using UnityEngine;
 public class DiceColorSO : ScriptableObject
 {
     public DiceColor ColorEnum; // Enum for safe referencing
-    public string Name;       // Color name (e.g., "Red")
-    public Color DisplayColor; // Unity Color for display
+    public string Name;
+    public Color DisplayColor;
     public Sprite Icon;       // Optional: Icon to represent the color
 }

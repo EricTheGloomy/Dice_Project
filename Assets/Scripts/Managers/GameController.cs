@@ -14,7 +14,6 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        // Add all managers to the list
         managers.Add(uiManager);
         managers.Add(resourceManager);
         managers.Add(diceManager);
