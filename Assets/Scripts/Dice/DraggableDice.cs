@@ -15,8 +15,7 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private Transform originalParent;  // The parent where the dice starts
     [SerializeField] private Vector2 originalPosition;  // The position where the dice starts
     
-    // We keep a reference to the slot we were dropped onto (if any).
-    // This will help us manage resetting more easily.
+    // Reference to the slot the dice is currently in (if any)
     private DiceSlot currentSlot;
 
     private void Awake()
@@ -74,19 +73,28 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             slot = result.gameObject.GetComponent<DiceSlot>();
             if (slot != null)
-                break; // We stop at the first valid DiceSlot
+                break; // Stop at the first valid DiceSlot
         }
 
         // If we found a DiceSlot that is currently empty...
         if (slot != null && slot.IsEmpty)
         {
-            Debug.Log("Valid empty slot found, assigning dice from DraggableDice script.");
-            slot.AssignDice(gameObject);
-            currentSlot = slot; // Keep track of our new home
+            Debug.Log("Valid empty slot found, attempting to assign dice.");
+            bool assigned = slot.AssignDice(gameObject);
+            if (assigned)
+            {
+                Debug.Log("Assignment successful.");
+                currentSlot = slot; // Keep track of our new home
+            }
+            else
+            {
+                Debug.Log("Assignment failed due to restrictions, resetting to original parent.");
+                ResetToOriginalParent();
+            }
         }
         else
         {
-            Debug.Log("No valid empty slot found, resetting to original parent from DraggableDice script.");
+            Debug.Log("No valid empty slot found, resetting to original parent.");
             ResetToOriginalParent();
         }
     }
@@ -98,5 +106,6 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         transform.SetParent(originalParent, true);
         rectTransform.anchoredPosition = originalPosition;
+        Debug.Log($"Dice {gameObject.name} reset to original parent: {originalParent.name}");
     }
 }

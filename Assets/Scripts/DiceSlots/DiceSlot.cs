@@ -16,12 +16,11 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     private void Awake()
     {
-        // We could add any initialization here
+        // Initialization if needed
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        // We do not do the re-parenting here, because DraggableDice handles that.
         Debug.Log($"OnDrop called on slot: {gameObject.name}");
         
         var draggedDice = eventData.pointerDrag;
@@ -33,13 +32,13 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Optional: highlight the slot or do some feedback
+        // Optional: Highlight the slot or provide feedback
         Debug.Log("Pointer entered the dice slot.");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Optional: remove highlight
+        // Optional: Remove highlight or feedback
         Debug.Log("Pointer exited the dice slot.");
     }
 
@@ -49,46 +48,44 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     /// </summary>
     public bool CanAcceptDice(Dice dice)
     {
-        // If no restriction is assigned, default to true
         if (slotRestriction == null)
         {
             return true;
         }
 
-        // Otherwise, check our single restriction object
         return slotRestriction.CheckDice(dice);
     }
 
     /// <summary>
-    /// AssignDice is called by DraggableDice once it has decided to place 
-    /// the dice in this slot (assuming the restrictions pass).
+    /// Attempts to assign the dice to this slot.
+    /// Returns true if assignment is successful, false otherwise.
     /// </summary>
-    public void AssignDice(GameObject diceObj)
+    public bool AssignDice(GameObject diceObj)
     {
         // 1) Find the Dice data from the UI
         DiceUI diceUI = diceObj.GetComponent<DiceUI>();
         if (diceUI == null)
         {
             Debug.LogWarning($"Cannot find DiceUI on {diceObj.name}. Cannot validate restrictions.");
-            return;
+            return false;
         }
 
         Dice diceData = diceUI.dataReference; // The actual data object
         if (diceData == null)
         {
             Debug.LogWarning($"Dice dataReference not found on {diceObj.name}, cannot validate restrictions.");
-            return;
+            return false;
         }
 
         // 2) Check if we can accept it
         if (!CanAcceptDice(diceData))
         {
             Debug.Log($"Dice {diceObj.name} does NOT meet the slot restrictions of {gameObject.name}.");
-            // We do NOT assign the dice if it fails
-            return;
+            // Do not assign the dice if it fails
+            return false;
         }
 
-        // 3) If restrictions pass, assign the dice
+        // 3) Assign the dice
         currentDice = diceObj;
         currentDice.transform.SetParent(transform, false);
 
@@ -102,6 +99,7 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         rectTransform.localScale        = Vector3.one;
         
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
+        return true;
     }
 
     public void ClearSlot()
