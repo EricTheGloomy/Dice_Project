@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewDiceSlotRestriction", menuName = "Dice/Slot Restriction")]
 public class DiceSlotRestrictionSO : ScriptableObject
 {
+    [Header("Visual Representation")]
+    [Tooltip("Sprite to visually represent the requirements for this dice slot.")]
+    public Sprite requirementSprite;
+
     [Header("Base Restrictions")]
     [Tooltip("If true, accepts any type of dice regardless of other restrictions.")]
     public bool allowAnyDice = false;

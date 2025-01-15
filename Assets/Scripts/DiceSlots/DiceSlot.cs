@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -7,13 +8,28 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     [Tooltip("Assign a DiceSlotRestrictionSO here if this slot is restricted.")]
     public DiceSlotRestrictionSO slotRestriction;
 
+    [Header("Requirement Visuals")]
+    public Image requirementsImage;   // Image showing requirements
+    public Image fulfilledImage;      // Image to show when fulfilled
+
     private GameObject currentDice;
+    public bool isRequirementFulfilled = false; // Tracks if requirements are fulfilled
 
     public bool IsEmpty => currentDice == null;
 
     private void Awake()
     {
-        // Initialization if needed
+        // Initialize visuals: requirements shown, fulfilled hidden
+        if(requirementsImage != null)
+        {
+            requirementsImage.enabled = true;
+            // If a slot restriction exists and has a sprite, use it.
+            if(slotRestriction != null && slotRestriction.requirementSprite != null)
+            {
+                requirementsImage.sprite = slotRestriction.requirementSprite;
+            }
+        }
+        if(fulfilledImage != null) fulfilledImage.enabled = false;
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -65,6 +81,12 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             return false;
         }
 
+        if (isRequirementFulfilled)
+        {
+            Debug.Log($"Slot {gameObject.name} requirements already fulfilled.");
+            return false;
+        }
+
         if (!CanAcceptDice(diceData))
         {
             Debug.Log($"Dice {diceObj.name} does NOT meet the slot restrictions of {gameObject.name}.");
@@ -84,7 +106,7 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         rectTransform.anchoredPosition = Vector2.zero;
         rectTransform.localRotation = Quaternion.identity;
         rectTransform.localScale = Vector3.one;
-        
+
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
         return true;
     }
