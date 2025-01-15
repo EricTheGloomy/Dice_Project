@@ -43,6 +43,8 @@ public class UIManager : MonoBehaviour, IManager
             Debug.LogWarning("DiceUI component or faceImage not set up correctly in prefab.");
         }
 
+        diceUI.SetActive(false); //Hide dice until rolled
+
         return diceUI;
     }
 

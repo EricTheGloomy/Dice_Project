@@ -10,6 +10,8 @@ public class Dice : IDice
 
     public bool IsPermanent { get; private set; }
 
+    public bool IsAssignedToSlot { get; set; }
+
     private DiceFaceSO[] diceFaces;
 
     public Dice(DiceColorSO color, DiceFaceSO[] faces, bool isPermanent = false)
@@ -18,5 +20,6 @@ public class Dice : IDice
         diceFaces = faces;
         CurrentValue = Random.Range(1, diceFaces.Length + 1);
         IsPermanent = isPermanent;
+        IsAssignedToSlot = false;
     }
 }

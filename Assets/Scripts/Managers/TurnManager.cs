@@ -21,12 +21,26 @@ public class TurnManager : MonoBehaviour, IManager
     {
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
-
-        dicePoolManager.RollAllDice();
     }
 
     public void EndTurn()
     {
+        foreach (var dice in dicePoolManager.dicePool)
+        {
+            if(dice.UIContainerObject != null)
+            {
+                var draggable = dice.UIContainerObject.GetComponent<DraggableDice>();
+                if (draggable != null)
+                {
+                    draggable.ResetToOriginalParent();
+                }
+                
+                dice.IsAssignedToSlot = false;
+                
+                dice.UIContainerObject.SetActive(false);
+            }
+        }
+
         dicePoolManager.ClearTemporaryDice();
         Debug.Log($"Turn {currentTurn} ended.");
     }

@@ -88,7 +88,7 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
-    private void ResetToOriginalParent()
+    public void ResetToOriginalParent()
     {
         transform.SetParent(originalParent, true);
         rectTransform.anchoredPosition = originalPosition;

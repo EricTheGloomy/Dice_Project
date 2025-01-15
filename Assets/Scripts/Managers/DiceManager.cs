@@ -45,6 +45,12 @@ public class DiceManager : MonoBehaviour, IManager
     public void RollDice(Dice dice)
     {
         dice.CurrentValue = Random.Range(1, diceFaces.Length + 1);
+
+        if(dice.UIContainerObject != null)
+        {
+            dice.UIContainerObject.SetActive(true);
+        }
+
         uiManager.UpdateDiceUI(dice.UIContainerObject, dice.CurrentSprite);
     }
 
@@ -52,6 +58,11 @@ public class DiceManager : MonoBehaviour, IManager
     {
         foreach (var dice in diceList)
         {
+            if (dice.IsAssignedToSlot)
+            {
+                continue;
+            }
+
             RollDice(dice);
         }
     }

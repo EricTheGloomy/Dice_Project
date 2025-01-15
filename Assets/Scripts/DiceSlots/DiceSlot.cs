@@ -75,6 +75,8 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         currentDice = diceObj;
         currentDice.transform.SetParent(transform, false);
 
+        diceData.IsAssignedToSlot = true;
+
         var rectTransform = diceObj.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -91,6 +93,12 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         if (currentDice != null)
         {
+            var diceUI = currentDice.GetComponent<DiceUI>();
+            if(diceUI != null && diceUI.dataReference != null)
+            {
+                diceUI.dataReference.IsAssignedToSlot = false;
+            }
+
             currentDice = null;
             Debug.Log($"Slot {gameObject.name} cleared.");
         }

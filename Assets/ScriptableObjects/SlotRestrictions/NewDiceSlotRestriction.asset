@@ -24,8 +24,7 @@ MonoBehaviour:
   requiredValue: 0
   excludeValue: 0
   valueToExclude: 0
-  excludeColor: 1
-  colorsToExclude:
-  - {fileID: 11400000, guid: 85547aa9be791b44c9b066d1b11c54b7, type: 2}
+  excludeColor: 0
+  colorsToExclude: []
   restrictBySumRequirement: 0
   requiredSum: 0
