@@ -12,11 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4854d036a943644e8116237067cda03, type: 3}
   m_Name: NewDiceSlotRestriction
   m_EditorClassIdentifier: 
-  restrictByColor: 1
-  allowedColors:
-  - {fileID: 11400000, guid: bd1c0ba80fc3ae048a0f4142aeb2e94d, type: 2}
+  allowAnyDice: 0
+  restrictByColor: 0
+  allowedColors: []
   restrictByValueRange: 0
   minValue: 1
   maxValue: 6
   allowEvensOnly: 0
   allowOddsOnly: 0
+  restrictToSingleValue: 0
+  requiredValue: 0
+  excludeValue: 0
+  valueToExclude: 0
+  excludeColor: 1
+  colorsToExclude:
+  - {fileID: 11400000, guid: 85547aa9be791b44c9b066d1b11c54b7, type: 2}
+  restrictBySumRequirement: 0
+  requiredSum: 0
