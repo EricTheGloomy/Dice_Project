@@ -222,6 +222,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549552529}
     m_Modifications:
+    - target: {fileID: 1554143982246879786, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
+      propertyPath: slotRestriction
+      value: 
+      objectReference: {fileID: 11400000, guid: 1ff1aba9c7d43414db80a50a151357ce, type: 2}
     - target: {fileID: 7661325056520258611, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
       propertyPath: m_Name
       value: DiceSlot
@@ -955,6 +959,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549552529}
     m_Modifications:
+    - target: {fileID: 1554143982246879786, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
+      propertyPath: slotRestriction
+      value: 
+      objectReference: {fileID: 11400000, guid: f1c11bd339f7f51419bb691658b15bef, type: 2}
     - target: {fileID: 7661325056520258611, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
       propertyPath: m_Name
       value: DiceSlot (1)
@@ -1453,6 +1461,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549552529}
     m_Modifications:
+    - target: {fileID: 1554143982246879786, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
+      propertyPath: slotRestriction
+      value: 
+      objectReference: {fileID: 11400000, guid: 6d6d3d96f6ade954f9877083192a9306, type: 2}
     - target: {fileID: 7661325056520258611, guid: 73a7e58adc5fa8f41b211eb458f07755, type: 3}
       propertyPath: m_Name
       value: DiceSlot (2)

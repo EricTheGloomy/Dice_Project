@@ -32,6 +32,10 @@ public class UIManager : MonoBehaviour, IManager
         var diceUIComponent = diceUI.GetComponent<DiceUI>();
         if (diceUIComponent != null && diceUIComponent.faceImage != null)
         {
+            // Link the data
+            diceUIComponent.dataReference = dice;
+
+            // Update visuals
             diceUIComponent.faceImage.color = dice.LogicalColor.DisplayColor;
             diceUIComponent.faceImage.sprite = dice.CurrentSprite;
         }
