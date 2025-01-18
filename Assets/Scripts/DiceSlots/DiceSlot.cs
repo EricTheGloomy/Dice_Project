@@ -67,6 +67,13 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public bool AssignDice(GameObject diceObj)
     {
+        // Check if requirements already fulfilled for this slot
+        if (isRequirementFulfilled)
+        {
+            Debug.Log($"Slot {gameObject.name} requirements already fulfilled. No further assignments accepted.");
+            return false;
+        }
+
         DiceUI diceUI = diceObj.GetComponent<DiceUI>();
         if (diceUI == null)
         {
@@ -81,23 +88,14 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             return false;
         }
 
-        if (isRequirementFulfilled)
-        {
-            Debug.Log($"Slot {gameObject.name} requirements already fulfilled.");
-            return false;
-        }
-
         if (!CanAcceptDice(diceData))
         {
             Debug.Log($"Dice {diceObj.name} does NOT meet the slot restrictions of {gameObject.name}.");
-
             return false;
         }
 
         currentDice = diceObj;
         currentDice.transform.SetParent(transform, false);
-
-        diceData.IsAssignedToSlot = true;
 
         var rectTransform = diceObj.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -106,6 +104,9 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         rectTransform.anchoredPosition = Vector2.zero;
         rectTransform.localRotation = Quaternion.identity;
         rectTransform.localScale = Vector3.one;
+        
+        // Mark the dice as assigned
+        diceData.IsAssignedToSlot = true;
 
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
         return true;
