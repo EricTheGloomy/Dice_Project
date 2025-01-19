@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Require_FourToSix
   m_EditorClassIdentifier: 
   requirementSprite: {fileID: 0}
+  requirementDescription: 4 - 6
   allowAnyDice: 0
   restrictByColor: 0
   allowedColors: []

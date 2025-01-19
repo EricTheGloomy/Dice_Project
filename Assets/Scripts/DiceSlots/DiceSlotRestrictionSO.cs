@@ -7,6 +7,10 @@ public class DiceSlotRestrictionSO : ScriptableObject
     [Tooltip("Sprite to visually represent the requirements for this dice slot.")]
     public Sprite requirementSprite;
 
+    [Header("Requirement Description")]
+    [Tooltip("Text description of the requirements for this dice slot.")]
+    public string requirementDescription;
+
     [Header("Base Restrictions")]
     [Tooltip("If true, accepts any type of dice regardless of other restrictions.")]
     public bool allowAnyDice = false;

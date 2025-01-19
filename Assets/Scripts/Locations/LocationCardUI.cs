@@ -60,16 +60,21 @@ public class LocationCardUI : MonoBehaviour
         // Safety check: If the user sets # of dice slots but doesn't fill the array
         // we might need to handle that
         int slotCount = data.numberOfDiceSlots;
+
         for (int i = 0; i < slotCount; i++)
         {
             GameObject slotObj = Instantiate(diceSlotPrefab, diceSlotsContainer);
             DiceSlot slot = slotObj.GetComponent<DiceSlot>();
             if (slot != null)
             {
-                // Assign the restriction from the array if it exists
+                // *** The important part: call the new SetRestriction method ***
                 if (data.slotRestrictions != null && i < data.slotRestrictions.Length)
                 {
-                    slot.slotRestriction = data.slotRestrictions[i];
+                    slot.SetRestriction(data.slotRestrictions[i]);
+                }
+                else
+                {
+                    slot.SetRestriction(null); // or skip if you want no restriction
                 }
 
                 spawnedSlots.Add(slot);

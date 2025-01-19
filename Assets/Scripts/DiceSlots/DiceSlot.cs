@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,6 +8,10 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     [Header("Slot Restriction")]
     [Tooltip("Assign a DiceSlotRestrictionSO here if this slot is restricted.")]
     public DiceSlotRestrictionSO slotRestriction;
+    
+    [Header("Requirement Description")]
+    [Tooltip("TextMesh Pro component to display requirement description.")]
+    public TextMeshProUGUI requirementDescriptionText;
 
     [Header("Requirement Visuals")]
     public Image requirementsImage;   // Image showing requirements
@@ -30,8 +35,42 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             }
         }
         if(fulfilledImage != null) fulfilledImage.enabled = false;
+
+        // Set requirement description text if available
+        if(requirementDescriptionText != null && slotRestriction != null)
+        {
+            requirementDescriptionText.text = slotRestriction.requirementDescription;
+        }
     }
 
+    /// <summary>
+    /// Sets the slot restriction data and updates the requirement text and visuals.
+    /// Call this when instantiating the slot or changing its restriction.
+    /// </summary>
+    public void SetRestriction(DiceSlotRestrictionSO newRestriction)
+    {
+        slotRestriction = newRestriction;
+
+        // Update requirement image
+        if (requirementsImage != null && newRestriction != null && newRestriction.requirementSprite != null)
+        {
+            requirementsImage.sprite = newRestriction.requirementSprite;
+        }
+
+        // Update the requirement description text
+        if (requirementDescriptionText != null)
+        {
+            if (newRestriction != null && !string.IsNullOrEmpty(newRestriction.requirementDescription))
+            {
+                requirementDescriptionText.text = newRestriction.requirementDescription;
+            }
+            else
+            {
+                requirementDescriptionText.text = ""; 
+            }
+        }
+    }
+    
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log($"OnDrop called on slot: {gameObject.name}");

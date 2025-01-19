@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Require_One
   m_EditorClassIdentifier: 
   requirementSprite: {fileID: 0}
+  requirementDescription: 1
   allowAnyDice: 0
   restrictByColor: 0
   allowedColors: []

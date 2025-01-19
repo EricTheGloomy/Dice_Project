@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Exclude_White
   m_EditorClassIdentifier: 
   requirementSprite: {fileID: 0}
+  requirementDescription: NO WHITE
   allowAnyDice: 0
   restrictByColor: 0
   allowedColors: []

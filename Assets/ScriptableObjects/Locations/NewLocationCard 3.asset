@@ -21,7 +21,7 @@ MonoBehaviour:
   ongoingEffectAmount: 0
   numberOfDiceSlots: 4
   slotRestrictions:
-  - {fileID: 11400000, guid: 31638373e9c26824387af79ff9181644, type: 2}
-  - {fileID: 11400000, guid: 0e74df67ddefb6949b14a36f1c31e118, type: 2}
-  - {fileID: 11400000, guid: 31638373e9c26824387af79ff9181644, type: 2}
-  - {fileID: 11400000, guid: 1cf711f028dbb024ca3f9588f9396dc4, type: 2}
+  - {fileID: 11400000, guid: be4f0055606da29439218a059c9bb273, type: 2}
+  - {fileID: 11400000, guid: 5ae5101706b25a9408b855f6c21024d4, type: 2}
+  - {fileID: 11400000, guid: 2cb423e59ecd2fe4b9ebee85e2ee31bf, type: 2}
+  - {fileID: 11400000, guid: 657e60331f674d446b190044d7cf94aa, type: 2}
