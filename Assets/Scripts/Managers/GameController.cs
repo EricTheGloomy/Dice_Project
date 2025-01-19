@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public DicePoolManager dicePoolManager;
     public TurnManager turnManager;
     public GameEndManager gameEndManager;
+    public LocationDeckManager locationDeckManager;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class GameController : MonoBehaviour
         managers.Add(dicePoolManager);
         managers.Add(turnManager);
         managers.Add(gameEndManager);
+        managers.Add(locationDeckManager);
 
         InitializeManagers();
     }
@@ -37,6 +39,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         Debug.Log("Game starting...");
+        locationDeckManager.PopulateInitialCards();
         turnManager.StartTurn();
     }
 }

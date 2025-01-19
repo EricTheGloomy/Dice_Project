@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf0e6803491a7c4d9c5e3527d009f99, type: 3}
+  m_Name: NewLocationCard
+  m_EditorClassIdentifier: 
+  locationName: 
+  description: 
+  frontSprite: {fileID: 0}
+  backSprite: {fileID: 0}
+  goldReward: 0
+  hasOngoingEffect: 0
+  ongoingEffectAmount: 0
+  numberOfDiceSlots: 6
+  slotRestrictions:
+  - {fileID: 11400000, guid: 3e444e46383e7be47925f6c0d4497ad2, type: 2}
+  - {fileID: 11400000, guid: 0e74df67ddefb6949b14a36f1c31e118, type: 2}
+  - {fileID: 11400000, guid: ec892546a7729d446880940c986aaa5c, type: 2}
+  - {fileID: 11400000, guid: 1cf711f028dbb024ca3f9588f9396dc4, type: 2}
+  - {fileID: 11400000, guid: 31638373e9c26824387af79ff9181644, type: 2}
+  - {fileID: 11400000, guid: 5ae5101706b25a9408b855f6c21024d4, type: 2}

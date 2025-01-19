@@ -6,6 +6,7 @@ public class TurnManager : MonoBehaviour, IManager
     public ResourceSO foodResource;
     public DiceManager diceManager;
     public DicePoolManager dicePoolManager;
+    public LocationDeckManager locationDeckManager;
 
     private int currentTurn;
 
@@ -14,6 +15,7 @@ public class TurnManager : MonoBehaviour, IManager
         resourceManager = controller.resourceManager;
         diceManager = controller.diceManager;
         dicePoolManager = controller.dicePoolManager;
+        locationDeckManager = controller.locationDeckManager;
         Debug.Log("TurnManager initialized.");
     }
 
@@ -21,6 +23,12 @@ public class TurnManager : MonoBehaviour, IManager
     {
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
+
+        // Apply ongoing effects from location cards here if you prefer:
+        if (locationDeckManager != null)
+        {
+            locationDeckManager.ApplyOngoingEffects(resourceManager, /* populationResource */ null);
+        }
     }
 
 //TO DO - come back to this and refactor when locations are done and dice slots should be easier to find than by findobjectoftype
@@ -75,6 +83,16 @@ public class TurnManager : MonoBehaviour, IManager
                 dice.IsAssignedToSlot = false;
                 dice.UIContainerObject.SetActive(false);
             }
+        }
+
+        // Check if any location cards were fulfilled this turn
+        // awarding gold or spawning new cards
+        if (locationDeckManager != null)
+        {
+            // Let's assume 'foodResource' is not relevant, so let's also define a 'goldResource' for simplicity
+            // For demonstration, let's pass in resourceManager.GetResourceSOByName("Gold") or something similar
+            // Or just create a public field in TurnManager referencing a gold ResourceSO
+            locationDeckManager.CheckCardResolutions(resourceManager, /* goldResource */ null);
         }
 
         dicePoolManager.ClearTemporaryDice();
