@@ -13,16 +13,14 @@ public class LocationDeckManager : MonoBehaviour, IManager
     [Header("UI Setup")]
     [Tooltip("Parent transform for the 4 card slots in the UI.")]
     public Transform cardContainer; 
-    public GameObject locationCardUIPrefab; // The prefab that has LocationCardUI
+    public GameObject locationCardUIPrefab;
 
     [Header("Active Cards Limit")]
     [Range(1, 4)]
     public int maxActiveCards = 4;
 
-    // Keep track of the active card UI instances
     private List<LocationCardUI> activeCardUIs = new List<LocationCardUI>();
 
-    // Delegates/Events for other managers to listen
     public delegate void CardResolvedHandler(LocationCardSO cardData);
     public event CardResolvedHandler OnCardResolved;
 
@@ -38,7 +36,6 @@ public class LocationDeckManager : MonoBehaviour, IManager
 
     public void PopulateInitialCards()
     {
-        // Fill up to maxActiveCards from the deck
         for (int i = 0; i < maxActiveCards; i++)
         {
             if (deckIndex < locationDeck.Count)
@@ -56,7 +53,6 @@ public class LocationDeckManager : MonoBehaviour, IManager
             return;
         }
 
-        // Create the UI for the next card
         var nextCardData = locationDeck[deckIndex];
         var cardObj = Instantiate(locationCardUIPrefab, cardContainer);
         var cardUI = cardObj.GetComponent<LocationCardUI>();
@@ -73,10 +69,6 @@ public class LocationDeckManager : MonoBehaviour, IManager
         deckIndex++;
     }
 
-    /// <summary>
-    /// Called (for example) at end of turn. Check each active card to see if it is fulfilled.
-    /// If so, apply reward, remove card, spawn a new one.
-    /// </summary>
     public void CheckCardResolutions(ResourceManager resourceManager, ResourceSO goldResource)
     {
         List<LocationCardUI> resolvedCards = new List<LocationCardUI>();
@@ -85,40 +77,31 @@ public class LocationDeckManager : MonoBehaviour, IManager
         {
             if (cardUI.IsCardFulfilled())
             {
-                // Apply the reward
                 if (resourceManager != null && goldResource != null)
                 {
                     resourceManager.AddResource(goldResource, cardUI.cardData.goldReward);
                 }
 
-                // Notify via delegate/event
                 OnCardResolved?.Invoke(cardUI.cardData);
 
-                // Collect it for removal
                 resolvedCards.Add(cardUI);
             }
         }
 
-        // Remove resolved cards from the active list
         foreach (var resolvedCard in resolvedCards)
         {
             activeCardUIs.Remove(resolvedCard);
             Destroy(resolvedCard.gameObject);
         }
 
-        // Spawn new cards to fill empty slots
         while (activeCardUIs.Count < maxActiveCards && deckIndex < locationDeck.Count)
         {
             SpawnNextCard();
         }
     }
 
-    /// <summary>
-    /// Called each turn if we want to apply ongoing effects (e.g. reduce resource).
-    /// </summary>
     public void ApplyOngoingEffects(ResourceManager resourceManager, ResourceSO populationResource)
     {
-        // Loop through active cards, apply effect if flagged
         foreach (var cardUI in activeCardUIs)
         {
             var data = cardUI.cardData;

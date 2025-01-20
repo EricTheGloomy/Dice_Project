@@ -86,6 +86,11 @@ public class DraggableDice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             Debug.Log("No valid empty slot found, resetting to original parent.");
             ResetToOriginalParent();
         }
+
+        if(transform.parent == canvas.transform)
+        {
+            ResetToOriginalParent();
+        }
     }
 
     public void ResetToOriginalParent()

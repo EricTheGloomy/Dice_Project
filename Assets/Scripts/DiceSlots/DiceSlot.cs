@@ -18,7 +18,7 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public Image fulfilledImage;      // Image to show when fulfilled
 
     private GameObject currentDice;
-    public bool isRequirementFulfilled = false; // Tracks if requirements are fulfilled
+    public bool isRequirementFulfilled = false;
 
     public bool IsEmpty => currentDice == null;
 

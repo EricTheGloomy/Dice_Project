@@ -18,15 +18,11 @@ public class LocationCardUI : MonoBehaviour
     public Transform diceSlotsContainer; 
     public GameObject diceSlotPrefab; // A UI prefab for an individual slot
 
-    // The "Model" reference
     public LocationCardSO cardData; 
 
-    // Keep references to the spawned slot objects
     private List<DiceSlot> spawnedSlots = new List<DiceSlot>();
 
-    /// <summary>
-    /// Called by LocationDeckManager (or some controller) to set up this UI.
-    /// </summary>
+
     public void Initialize(LocationCardSO data)
     {
         cardData = data;
@@ -43,7 +39,6 @@ public class LocationCardUI : MonoBehaviour
         if (descriptionText != null)
             descriptionText.text = data.description;
 
-        // Spawn dice slots based on the data
         SpawnDiceSlots(data);
     }
 
@@ -67,14 +62,13 @@ public class LocationCardUI : MonoBehaviour
             DiceSlot slot = slotObj.GetComponent<DiceSlot>();
             if (slot != null)
             {
-                // *** The important part: call the new SetRestriction method ***
                 if (data.slotRestrictions != null && i < data.slotRestrictions.Length)
                 {
                     slot.SetRestriction(data.slotRestrictions[i]);
                 }
                 else
                 {
-                    slot.SetRestriction(null); // or skip if you want no restriction
+                    slot.SetRestriction(null);
                 }
 
                 spawnedSlots.Add(slot);
@@ -82,19 +76,12 @@ public class LocationCardUI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// This method can be called externally to update the "visible side" of the card 
-    /// if you want to show back or front, or you can do it automatically.
-    /// </summary>
     public void ShowFront(bool show)
     {
         if (frontImage != null) frontImage.gameObject.SetActive(show);
         if (backImage != null) backImage.gameObject.SetActive(!show);
     }
 
-    /// <summary>
-    /// Check if all dice slots are fulfilled, meaning the card is 'resolved'.
-    /// </summary>
     public bool IsCardFulfilled()
     {
         foreach (var slot in spawnedSlots)
@@ -107,9 +94,6 @@ public class LocationCardUI : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// Access spawned DiceSlots if needed externally (like for cleanup or checks).
-    /// </summary>
     public List<DiceSlot> GetSlots()
     {
         return spawnedSlots;
