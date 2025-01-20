@@ -34,34 +34,8 @@ public class TurnManager : MonoBehaviour, IManager
 //TO DO - come back to this and refactor when locations are done and dice slots should be easier to find than by findobjectoftype
     public void EndTurn()
     {
-        foreach (var slot in FindObjectsOfType<DiceSlot>())
-        {
-            if(slot.isRequirementFulfilled) 
-                continue;
-
-            bool requirementMet = false;
-            if(slot.GetCurrentDice() != null)
-            {
-                var diceUI = slot.GetCurrentDice().GetComponent<DiceUI>();
-                if(diceUI != null && diceUI.dataReference != null)
-                {
-                    requirementMet = slot.CanAcceptDice(diceUI.dataReference);
-                }
-            }
-
-            if(requirementMet)
-            {
-                if(slot.requirementsImage != null) slot.requirementsImage.enabled = false;
-                if(slot.fulfilledImage != null) slot.fulfilledImage.enabled = true;
-                slot.isRequirementFulfilled = true;
-            }
-            else
-            {
-                if(slot.requirementsImage != null) slot.requirementsImage.enabled = true;
-                if(slot.fulfilledImage != null) slot.fulfilledImage.enabled = false;
-                slot.isRequirementFulfilled = false;
-            }
-        }
+        // Let the deck manager check all slots
+        locationDeckManager.CheckAllSlotsOnActiveCards();
 
         foreach (var dice in dicePoolManager.dicePool)
         {

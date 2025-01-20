@@ -170,4 +170,53 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         return currentDice;
     }
+
+    public void FulfillSlotVisuals()
+    {
+        // Mark the slot as fulfilled
+        isRequirementFulfilled = true;
+        
+        // Hide the requirement text
+        if (requirementDescriptionText != null)
+        {
+            requirementDescriptionText.gameObject.SetActive(false);
+        }
+
+        // Hide the requirement sprite
+        if (requirementsImage != null)
+        {
+            requirementsImage.enabled = false;
+        }
+
+        // Show the fulfilled sprite
+        if (fulfilledImage != null)
+        {
+            fulfilledImage.enabled = true;
+        }
+    }
+
+    public void UnfulfillSlotVisuals()
+    {
+        // Mark the slot as unfulfilled
+        isRequirementFulfilled = false;
+        
+        // Show requirement text
+        if (requirementDescriptionText != null)
+        {
+            requirementDescriptionText.gameObject.SetActive(true);
+        }
+
+        // Show requirement sprite
+        if (requirementsImage != null)
+        {
+            requirementsImage.enabled = true;
+        }
+
+        // Hide the fulfilled sprite
+        if (fulfilledImage != null)
+        {
+            fulfilledImage.enabled = false;
+        }
+    }
+
 }
