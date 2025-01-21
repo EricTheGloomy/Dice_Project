@@ -26,19 +26,28 @@ public class TurnManager : MonoBehaviour, IManager
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
 
-        // Apply ongoing effects from location cards here if you prefer:
-        if (locationDeckManager != null)
+        // Reset any dice used last turn so they can be used again
+        foreach (var dice in dicePoolManager.dicePool)
         {
-            locationDeckManager.ApplyOngoingEffects(resourceManager, /* populationResource */ null);
-        }
-    }
+            dice.IsUsedThisTurn = false;
+            dice.IsAssignedToSlot = false;
 
-//TO DO - come back to this and refactor when locations are done and dice slots should be easier to find than by findobjectoftype
+            // Optionally hide them until the player chooses to roll
+            if (dice.UIContainerObject != null)
+            {
+                dice.UIContainerObject.SetActive(false);
+            }
+        }
+
+        // (Previously, ApplyOngoingEffects was here. Move it to EndTurn if you want end-of-turn effect)
+    }
+    
     public void EndTurn()
     {
-        // Let the deck manager check all slots
+        // Let the deck manager check all slots (and possibly finalize location completions)
         locationDeckManager.CheckAllSlotsOnActiveCards();
 
+        // Return dice to their original parent and hide them (only if you want to "clean up")
         foreach (var dice in dicePoolManager.dicePool)
         {
             if(dice.UIContainerObject != null)
@@ -48,24 +57,21 @@ public class TurnManager : MonoBehaviour, IManager
                 {
                     draggable.ResetToOriginalParent();
                 }
-                dice.IsAssignedToSlot = false;
                 dice.UIContainerObject.SetActive(false);
+                dice.IsAssignedToSlot = false;
             }
         }
 
-        // Check if any location cards were fulfilled this turn
-        // awarding gold or spawning new cards
+        // Clear any temporary dice
+        dicePoolManager.ClearTemporaryDice();
+
+        // Ongoing effects for each incomplete location happen now (end of turn):
         if (locationDeckManager != null)
         {
-            // Let's assume 'foodResource' is not relevant, so let's also define a 'goldResource' for simplicity
-            // For demonstration, let's pass in resourceManager.GetResourceSOByName("Gold") or something similar
-            // Or just create a public field in TurnManager referencing a gold ResourceSO
+            locationDeckManager.ApplyOngoingEffects(resourceManager, /* e.g. populationResource */ null);
             locationDeckManager.CheckCardResolutions(resourceManager, /* goldResource */ null);
         }
 
-        dicePoolManager.ClearTemporaryDice();
         Debug.Log($"Turn {currentTurn} ended.");
-
     }
-
 }

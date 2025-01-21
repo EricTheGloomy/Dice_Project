@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI; // for Button
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class SkillUI : MonoBehaviour
@@ -21,7 +21,6 @@ public class SkillUI : MonoBehaviour
     public SkillSO skillData;
 
     private List<DiceSlot> spawnedSlots = new List<DiceSlot>();
-
 
     public void Initialize(SkillSO data)
     {
@@ -91,7 +90,6 @@ public class SkillUI : MonoBehaviour
             if (useSkillButton != null) 
             {
                 useSkillButton.gameObject.SetActive(false);
-                // or just set useSkillButton.interactable = false;
             }
         }
     }
@@ -109,24 +107,42 @@ public class SkillUI : MonoBehaviour
         return true;
     }
 
-//TO DO should be in skill manager probably
     public void UseSkill()
     {
-        // If you have a reference to your SkillManager or GameController:
+        // 1) Apply the skill effect
         SkillManager skillManager = FindObjectOfType<SkillManager>();
         if (skillManager != null)
         {
             skillManager.ApplySkillEffect(skillData);
         }
 
-        // Reset the dice slots
+        // 2) Mark all dice used in these slots as used-for-the-turn
+        foreach (var slot in spawnedSlots)
+        {
+            var diceGO = slot.GetCurrentDice();
+            if (diceGO != null)
+            {
+                DiceUI diceUI = diceGO.GetComponent<DiceUI>();
+                if (diceUI != null && diceUI.dataReference != null)
+                {
+                    // Mark this dice as used
+                    diceUI.dataReference.IsUsedThisTurn = true;
+
+                    // Optionally hide the dice so it can't be dragged out again
+                    diceGO.SetActive(false);
+                }
+            }
+        }
+
+        // 3) Clear the slots so the skill can be reused with fresh dice
+        //    (if you want the skill to be reusable multiple times in a single turn)
         foreach (var slot in spawnedSlots)
         {
             slot.ClearSlot();
             slot.UnfulfillSlotVisuals();
         }
 
-        // Hide the button
+        // 4) Hide the button
         if (useSkillButton != null)
         {
             useSkillButton.gameObject.SetActive(false);
@@ -134,5 +150,4 @@ public class SkillUI : MonoBehaviour
 
         Debug.Log($"Skill {skillData.skillName} used, effect applied!");
     }
-
 }

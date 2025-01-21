@@ -44,6 +44,13 @@ public class DiceManager : MonoBehaviour, IManager
 
     public void RollDice(Dice dice)
     {
+        // Skip dice that have been used this turn
+        if (dice.IsUsedThisTurn)
+        {
+            Debug.Log($"Dice {dice.UIContainerObject.name} is used this turn; skipping roll.");
+            return;
+        }
+
         dice.CurrentValue = Random.Range(1, diceFaces.Length + 1);
 
         if(dice.UIContainerObject != null)

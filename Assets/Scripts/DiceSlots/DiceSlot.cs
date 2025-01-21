@@ -28,7 +28,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if(requirementsImage != null)
         {
             requirementsImage.enabled = true;
-            // If a slot restriction exists and has a sprite, use it.
             if(slotRestriction != null && slotRestriction.requirementSprite != null)
             {
                 requirementsImage.sprite = slotRestriction.requirementSprite;
@@ -43,10 +42,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         }
     }
 
-    /// <summary>
-    /// Sets the slot restriction data and updates the requirement text and visuals.
-    /// Call this when instantiating the slot or changing its restriction.
-    /// </summary>
     public void SetRestriction(DiceSlotRestrictionSO newRestriction)
     {
         slotRestriction = newRestriction;
@@ -84,13 +79,11 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Optional: Highlight the slot or provide feedback
         Debug.Log("Pointer entered the dice slot.");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Optional: Remove highlight or feedback
         Debug.Log("Pointer exited the dice slot.");
     }
 
@@ -146,15 +139,46 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         
         // Mark the dice as assigned
         diceData.IsAssignedToSlot = true;
-//TEST
-    // *** Mark this slot as fulfilled here! ***
-    isRequirementFulfilled = true;
 
-    // If you have a dedicated method to handle visuals, you can call:
-    FulfillSlotVisuals();
-    diceObj.SetActive(false);
-//TEST
+        // Mark this slot as fulfilled 
+        isRequirementFulfilled = true;
+        FulfillSlotVisuals();
+        diceObj.SetActive(false);
+
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
+
+        // === ADD THIS CODE BLOCK TO IMMEDIATELY REWARD A COMPLETED LOCATION ===
+        // Check if parent location is now fully fulfilled
+        var locationCardUI = GetComponentInParent<LocationCardUI>();
+        if (locationCardUI != null)
+        {
+            if (locationCardUI.IsCardFulfilled())
+            {
+                // The location is completed
+                // Immediately award gold or other reward
+                var rm = FindObjectOfType<ResourceManager>();
+                if (rm != null)
+                {
+                    // If you have a reference to a goldResource in your ResourceManager or GameController
+                    // For example, if ResourceManager has a field public ResourceSO goldResource;
+                    // or you can find it by name
+                    ResourceSO goldResourceSO = /* get reference from somewhere */ null;
+
+                    if (goldResourceSO != null)
+                    {
+                        rm.AddResource(goldResourceSO, locationCardUI.cardData.goldReward);
+                        Debug.Log($"Location {locationCardUI.cardData.locationName} completed! Awarding {locationCardUI.cardData.goldReward} gold.");
+                    }
+                }
+
+                // Optionally mark the card visually as completed
+                locationCardUI.ShowFront(false);
+
+                // Or trigger an event, or remove the card, etc.
+            }
+        }
+        // === END CODE BLOCK ===
+
         return true;
     }
 
@@ -167,13 +191,10 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             {
                 diceUI.dataReference.IsAssignedToSlot = false;
             }
-
             currentDice = null;
 
-//TEST
-    // *** Mark it as unfulfilled again ***
-    isRequirementFulfilled = false;
-//TEST
+            // Mark it as unfulfilled again
+            isRequirementFulfilled = false;
             Debug.Log($"Slot {gameObject.name} cleared.");
         }
     }
@@ -185,7 +206,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void FulfillSlotVisuals()
     {
-        // Mark the slot as fulfilled
         isRequirementFulfilled = true;
         
         // Hide the requirement text
@@ -209,7 +229,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void UnfulfillSlotVisuals()
     {
-        // Mark the slot as unfulfilled
         isRequirementFulfilled = false;
         
         // Show requirement text
@@ -230,5 +249,4 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             fulfilledImage.enabled = false;
         }
     }
-
 }
