@@ -3,11 +3,14 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour, IManager
 {
     public ResourceManager resourceManager;
-    public ResourceSO foodResource;
     public DiceManager diceManager;
     public DicePoolManager dicePoolManager;
     public LocationDeckManager locationDeckManager;
     public SkillManager skillManager;
+
+    [Header("Resources Used for End Turn Effects")]
+    public ResourceSO goldResource;       // <-- Assign your GoldResourceSO in Inspector
+    public ResourceSO populationResource; // <-- Assign your PopulationResourceSO in Inspector
 
     private int currentTurn;
 
@@ -32,22 +35,23 @@ public class TurnManager : MonoBehaviour, IManager
             dice.IsUsedThisTurn = false;
             dice.IsAssignedToSlot = false;
 
-            // Optionally hide them until the player chooses to roll
             if (dice.UIContainerObject != null)
             {
                 dice.UIContainerObject.SetActive(false);
             }
         }
 
-        // (Previously, ApplyOngoingEffects was here. Move it to EndTurn if you want end-of-turn effect)
+        // We do NOT apply location ongoing effects here, we do it at EndTurn
     }
     
     public void EndTurn()
     {
-        // Let the deck manager check all slots (and possibly finalize location completions)
+        Debug.Log($"Ending turn {currentTurn}...");
+
+        // 1) Check all location dice slots and finalize them
         locationDeckManager.CheckAllSlotsOnActiveCards();
 
-        // Return dice to their original parent and hide them (only if you want to "clean up")
+        // 2) Optionally reset dice UI positions
         foreach (var dice in dicePoolManager.dicePool)
         {
             if(dice.UIContainerObject != null)
@@ -59,17 +63,23 @@ public class TurnManager : MonoBehaviour, IManager
                 }
                 dice.UIContainerObject.SetActive(false);
                 dice.IsAssignedToSlot = false;
+                dice.IsUsedThisTurn = false;
             }
         }
 
-        // Clear any temporary dice
+        // 3) Clear temporary dice
         dicePoolManager.ClearTemporaryDice();
 
-        // Ongoing effects for each incomplete location happen now (end of turn):
+        // 4) Apply ongoing effects to incomplete locations
+        //    e.g. reduce population
         if (locationDeckManager != null)
         {
-            locationDeckManager.ApplyOngoingEffects(resourceManager, /* e.g. populationResource */ null);
-            locationDeckManager.CheckCardResolutions(resourceManager, /* goldResource */ null);
+            locationDeckManager.ApplyOngoingEffects(resourceManager, populationResource);
+
+            // 5) Now check if any card is fully completed and give gold
+            //    This method is expecting to get goldResource as well
+            //NOTE cards should rather reward gold immediately not here
+            //locationDeckManager.CheckCardResolutions(resourceManager, goldResource);
         }
 
         Debug.Log($"Turn {currentTurn} ended.");

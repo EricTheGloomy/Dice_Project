@@ -1081,11 +1081,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceManager: {fileID: 1844178578}
-  foodResource: {fileID: 11400000, guid: 8870eda49538dfb49a4ff4eb464e9443, type: 2}
   diceManager: {fileID: 1439532508}
-  dicePoolManager: {fileID: 0}
-  locationDeckManager: {fileID: 0}
-  skillManager: {fileID: 0}
+  dicePoolManager: {fileID: 839383086}
+  locationDeckManager: {fileID: 351954842}
+  skillManager: {fileID: 1677171399}
+  goldResource: {fileID: 11400000, guid: 5ed5192c0f6bc434e93e9e108d5b0188, type: 2}
+  populationResource: {fileID: 11400000, guid: 7dcbca6b96a29f64990b7febb88655cf, type: 2}
 --- !u!4 &865583328
 Transform:
   m_ObjectHideFlags: 0

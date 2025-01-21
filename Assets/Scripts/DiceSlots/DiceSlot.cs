@@ -147,37 +147,24 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
 
-        // === ADD THIS CODE BLOCK TO IMMEDIATELY REWARD A COMPLETED LOCATION ===
-        // Check if parent location is now fully fulfilled
+        // Once the final slot is fulfilled, check if the entire location is done
         var locationCardUI = GetComponentInParent<LocationCardUI>();
-        if (locationCardUI != null)
+        if (locationCardUI != null && locationCardUI.IsCardFulfilled())
         {
-            if (locationCardUI.IsCardFulfilled())
+            // Find the TurnManager (or ResourceManager) in the scene
+            TurnManager turnManager = FindObjectOfType<TurnManager>();
+            ResourceManager rm = FindObjectOfType<ResourceManager>();
+
+            // If found, award gold
+            if (turnManager != null && rm != null && turnManager.goldResource != null)
             {
-                // The location is completed
-                // Immediately award gold or other reward
-                var rm = FindObjectOfType<ResourceManager>();
-                if (rm != null)
-                {
-                    // If you have a reference to a goldResource in your ResourceManager or GameController
-                    // For example, if ResourceManager has a field public ResourceSO goldResource;
-                    // or you can find it by name
-                    ResourceSO goldResourceSO = /* get reference from somewhere */ null;
-
-                    if (goldResourceSO != null)
-                    {
-                        rm.AddResource(goldResourceSO, locationCardUI.cardData.goldReward);
-                        Debug.Log($"Location {locationCardUI.cardData.locationName} completed! Awarding {locationCardUI.cardData.goldReward} gold.");
-                    }
-                }
-
-                // Optionally mark the card visually as completed
-                locationCardUI.ShowFront(false);
-
-                // Or trigger an event, or remove the card, etc.
+                rm.AddResource(turnManager.goldResource, locationCardUI.cardData.goldReward);
+                Debug.Log($"Immediate awarding {locationCardUI.cardData.goldReward} gold for completing {locationCardUI.cardData.locationName}!");
             }
+
+            // Optionally hide or flip the location
+            locationCardUI.ShowFront(false);
         }
-        // === END CODE BLOCK ===
 
         return true;
     }

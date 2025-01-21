@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: NewLocationCard 2
   m_EditorClassIdentifier: 
   locationName: 
-  description: 
+  description: 'End Turn: -1 population
+
+    Completed: 1 coin'
   frontSprite: {fileID: 0}
   backSprite: {fileID: 0}
   goldReward: 1

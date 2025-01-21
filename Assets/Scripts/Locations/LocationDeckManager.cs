@@ -153,10 +153,15 @@ public class LocationDeckManager : MonoBehaviour, IManager
     {
         foreach (var cardUI in activeCardUIs)
         {
-            var data = cardUI.cardData;
-            if (data.hasOngoingEffect && resourceManager != null && populationResource != null)
+            // Only affect cards that are NOT fully fulfilled yet
+            if (!cardUI.IsCardFulfilled())
             {
-                resourceManager.DeductResource(populationResource, data.ongoingEffectAmount);
+                var data = cardUI.cardData;
+                if (data.hasOngoingEffect && resourceManager != null && populationResource != null)
+                {
+                    resourceManager.DeductResource(populationResource, data.ongoingEffectAmount);
+                    Debug.Log($"Applying {data.ongoingEffectAmount} ongoing effect from card: {data.locationName} on population resource.");
+                }
             }
         }
     }
