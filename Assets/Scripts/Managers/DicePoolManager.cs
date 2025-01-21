@@ -64,8 +64,16 @@ public class DicePoolManager : MonoBehaviour, IManager
         }
 
         var diceUI = uiManager.CreateDiceUI(newDice);
+
         newDice.UIContainerObject = diceUI;
         uiManager.UpdateDiceUI(diceUI, newDice.CurrentSprite);
+        
+        //TEST
+        if (!isPermanent)
+        {
+            newDice.UIContainerObject.SetActive(true);
+        }
+        //TEST
     }
 
     public void RollAllDice()

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af4a9b8d96bc4c46b4559bf3686fb6e, type: 3}
+  m_Name: NewSkill 2
+  m_EditorClassIdentifier: 
+  skillName: Skill 3
+  skillDescription: Add 1 to all dice
+  diceSlotCount: 2
+  slotRestrictions:
+  - {fileID: 11400000, guid: ec892546a7729d446880940c986aaa5c, type: 2}
+  - {fileID: 11400000, guid: 2cb423e59ecd2fe4b9ebee85e2ee31bf, type: 2}
+  createNewDice: 0
+  newDiceColor: {fileID: 0}
+  newDiceFaceValue: 0
+  affectAllDice: 1
+  affectOnlyColor: 0
+  colorToAffect: {fileID: 0}
+  affectOnlyOdds: 0
+  affectOnlyEvens: 0
+  pipChange: 1

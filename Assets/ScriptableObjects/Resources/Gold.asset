@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Gold
   m_EditorClassIdentifier: 
   Name: Gold
+  Icon: {fileID: 21300000, guid: ff172313e59f56e4098db71cc81b7a78, type: 3}
   StartingValue: 5
   MaxValue: 100

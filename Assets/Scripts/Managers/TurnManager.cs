@@ -7,6 +7,7 @@ public class TurnManager : MonoBehaviour, IManager
     public DiceManager diceManager;
     public DicePoolManager dicePoolManager;
     public LocationDeckManager locationDeckManager;
+    public SkillManager skillManager;
 
     private int currentTurn;
 
@@ -16,6 +17,7 @@ public class TurnManager : MonoBehaviour, IManager
         diceManager = controller.diceManager;
         dicePoolManager = controller.dicePoolManager;
         locationDeckManager = controller.locationDeckManager;
+        skillManager = controller.skillManager;
         Debug.Log("TurnManager initialized.");
     }
 
@@ -63,6 +65,7 @@ public class TurnManager : MonoBehaviour, IManager
 
         dicePoolManager.ClearTemporaryDice();
         Debug.Log($"Turn {currentTurn} ended.");
+
     }
 
 }

@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public TurnManager turnManager;
     public GameEndManager gameEndManager;
     public LocationDeckManager locationDeckManager;
+    public SkillManager skillManager;
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class GameController : MonoBehaviour
         managers.Add(turnManager);
         managers.Add(gameEndManager);
         managers.Add(locationDeckManager);
+        managers.Add(skillManager);
 
         InitializeManagers();
     }

@@ -146,7 +146,14 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         
         // Mark the dice as assigned
         diceData.IsAssignedToSlot = true;
+//TEST
+    // *** Mark this slot as fulfilled here! ***
+    isRequirementFulfilled = true;
 
+    // If you have a dedicated method to handle visuals, you can call:
+    FulfillSlotVisuals();
+    diceObj.SetActive(false);
+//TEST
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
         return true;
     }
@@ -162,6 +169,11 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             }
 
             currentDice = null;
+
+//TEST
+    // *** Mark it as unfulfilled again ***
+    isRequirementFulfilled = false;
+//TEST
             Debug.Log($"Slot {gameObject.name} cleared.");
         }
     }

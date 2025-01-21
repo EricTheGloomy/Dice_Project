@@ -19,10 +19,10 @@ public class LocationDeckManager : MonoBehaviour, IManager
     [Range(1, 4)]
     public int maxActiveCards = 4;
 
-[Header("Stage Settings")]
-public bool useStages = true; // If you want to turn on/off stage-based flow
-public int currentStage = 1;
-public int cardsPerStage = 4; // how many cards appear per stage
+    [Header("Stage Settings")]
+    public bool useStages = true; // If you want to turn on/off stage-based flow
+    public int currentStage = 1;
+    public int cardsPerStage = 4; // how many cards appear per stage
 
     private List<LocationCardUI> activeCardUIs = new List<LocationCardUI>();
 
@@ -39,18 +39,36 @@ public int cardsPerStage = 4; // how many cards appear per stage
         // For now, do nothing.
     }
 
-public void PopulateInitialCards()
-{
-    // If you're using stage-based flow, we only spawn `cardsPerStage` for the first stage:
-    // Otherwise, if not using stage flow, we can do the old approach of spawning maxActiveCards.
-    if (useStages)
+    public void PopulateInitialCards()
     {
-        SpawnStage(currentStage);
+        // If you're using stage-based flow, we only spawn `cardsPerStage` for the first stage:
+        // Otherwise, if not using stage flow, we can do the old approach of spawning maxActiveCards.
+        if (useStages)
+        {
+            SpawnStage(currentStage);
+        }
+        else
+        {
+            // old approach
+            for (int i = 0; i < maxActiveCards; i++)
+            {
+                if (deckIndex < locationDeck.Count)
+                {
+                    SpawnNextCard();
+                }
+            }
+        }
     }
-    else
+
+    // This spawns 4 new cards (or however many you define per stage)
+    private void SpawnStage(int stageNumber)
     {
-        // old approach
-        for (int i = 0; i < maxActiveCards; i++)
+        // Clear out any existing cards first if you want them gone
+        // (or if you want them to remain on screen, skip this)
+        ClearCurrentCards();
+
+        // Spawn the next set of cards from the deck
+        for (int i = 0; i < cardsPerStage; i++)
         {
             if (deckIndex < locationDeck.Count)
             {
@@ -58,24 +76,6 @@ public void PopulateInitialCards()
             }
         }
     }
-}
-
-// This spawns 4 new cards (or however many you define per stage)
-private void SpawnStage(int stageNumber)
-{
-    // Clear out any existing cards first if you want them gone
-    // (or if you want them to remain on screen, skip this)
-    ClearCurrentCards();
-
-    // Spawn the next set of cards from the deck
-    for (int i = 0; i < cardsPerStage; i++)
-    {
-        if (deckIndex < locationDeck.Count)
-        {
-            SpawnNextCard();
-        }
-    }
-}
     private void SpawnNextCard()
     {
         if (deckIndex >= locationDeck.Count)
@@ -100,54 +100,54 @@ private void SpawnStage(int stageNumber)
         deckIndex++;
     }
 
-public void CheckCardResolutions(ResourceManager resourceManager, ResourceSO goldResource)
-{
-    // Reward or flip each card if fully resolved:
-    foreach (var cardUI in activeCardUIs)
+    public void CheckCardResolutions(ResourceManager resourceManager, ResourceSO goldResource)
     {
-        if (cardUI.IsCardFulfilled())
+        // Reward or flip each card if fully resolved:
+        foreach (var cardUI in activeCardUIs)
         {
-            // reward, flip, etc.
-            if (resourceManager != null && goldResource != null)
+            if (cardUI.IsCardFulfilled())
             {
-                resourceManager.AddResource(goldResource, cardUI.cardData.goldReward);
+                // reward, flip, etc.
+                if (resourceManager != null && goldResource != null)
+                {
+                    resourceManager.AddResource(goldResource, cardUI.cardData.goldReward);
+                }
+                OnCardResolved?.Invoke(cardUI.cardData);
+
+                cardUI.ShowFront(false);
             }
-            OnCardResolved?.Invoke(cardUI.cardData);
-
-            cardUI.ShowFront(false);
         }
-    }
 
-    // Now check if *all* are resolved
-    bool allResolved = true;
-    foreach (var cardUI in activeCardUIs)
-    {
-        if (!cardUI.IsCardFulfilled())
+        // Now check if *all* are resolved
+        bool allResolved = true;
+        foreach (var cardUI in activeCardUIs)
         {
-            allResolved = false;
-            break;
+            if (!cardUI.IsCardFulfilled())
+            {
+                allResolved = false;
+                break;
+            }
+        }
+
+        // If stage-based flow is on, and indeed all are resolved...
+        if (useStages && allResolved)
+        {
+            Debug.Log($"Stage {currentStage} all resolved. Moving to next stage!");
+            currentStage++;
+            SpawnStage(currentStage);
         }
     }
 
-    // If stage-based flow is on, and indeed all are resolved...
-    if (useStages && allResolved)
+    // If you want to remove the old cards from the screen
+    // before spawning the next stage:
+    private void ClearCurrentCards()
     {
-        Debug.Log($"Stage {currentStage} all resolved. Moving to next stage!");
-        currentStage++;
-        SpawnStage(currentStage);
+        foreach (var cardUI in activeCardUIs)
+        {
+            Destroy(cardUI.gameObject);
+        }
+        activeCardUIs.Clear();
     }
-}
-
-// If you want to remove the old cards from the screen
-// before spawning the next stage:
-private void ClearCurrentCards()
-{
-    foreach (var cardUI in activeCardUIs)
-    {
-        Destroy(cardUI.gameObject);
-    }
-    activeCardUIs.Clear();
-}
 
     public void ApplyOngoingEffects(ResourceManager resourceManager, ResourceSO populationResource)
     {
