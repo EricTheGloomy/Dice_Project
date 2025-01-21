@@ -180,8 +180,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             }
             currentDice = null;
 
-            // Mark it as unfulfilled again
-            isRequirementFulfilled = false;
             Debug.Log($"Slot {gameObject.name} cleared.");
         }
     }

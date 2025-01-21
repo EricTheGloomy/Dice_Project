@@ -104,4 +104,14 @@ public class SkillManager : MonoBehaviour, IManager
             }, skillData.pipChange);
         }
     }
+
+    public void ClearAllSkillSlots()
+    {
+        // For each skill UI, forcibly clear the slots
+        foreach (SkillUI skill in activeSkills)
+        {
+            skill.ForceClearSlots();
+        }
+    }
+
 }

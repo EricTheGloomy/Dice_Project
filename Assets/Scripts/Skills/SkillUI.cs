@@ -150,4 +150,22 @@ public class SkillUI : MonoBehaviour
 
         Debug.Log($"Skill {skillData.skillName} used, effect applied!");
     }
+
+    public void ForceClearSlots()
+    {
+        foreach (DiceSlot slot in spawnedSlots)
+        {
+            // If there's a dice assigned, let's unassign it
+            slot.ClearSlot();
+            slot.isRequirementFulfilled = false;
+            slot.UnfulfillSlotVisuals();
+        }
+
+        // If we also want to hide the "Use Skill" button
+        if (useSkillButton != null)
+        {
+            useSkillButton.gameObject.SetActive(false);
+        }
+    }
+
 }

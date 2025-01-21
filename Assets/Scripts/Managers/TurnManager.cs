@@ -82,6 +82,12 @@ public class TurnManager : MonoBehaviour, IManager
             //locationDeckManager.CheckCardResolutions(resourceManager, goldResource);
         }
 
+        // Step X: For each skill in your skillManager, clear its slots
+        if (skillManager != null)
+        {
+            skillManager.ClearAllSkillSlots();
+        }
+
         Debug.Log($"Turn {currentTurn} ended.");
     }
 }
