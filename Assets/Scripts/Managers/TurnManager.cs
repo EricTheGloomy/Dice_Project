@@ -3,10 +3,14 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour, IManager
 {
     public ResourceManager resourceManager;
-    public ResourceSO foodResource;
     public DiceManager diceManager;
     public DicePoolManager dicePoolManager;
     public LocationDeckManager locationDeckManager;
+    public SkillManager skillManager;
+
+    [Header("Resources Used for End Turn Effects")]
+    public ResourceSO goldResource;       // <-- Assign your GoldResourceSO in Inspector
+    public ResourceSO populationResource; // <-- Assign your PopulationResourceSO in Inspector
 
     private int currentTurn;
 
@@ -16,6 +20,7 @@ public class TurnManager : MonoBehaviour, IManager
         diceManager = controller.diceManager;
         dicePoolManager = controller.dicePoolManager;
         locationDeckManager = controller.locationDeckManager;
+        skillManager = controller.skillManager;
         Debug.Log("TurnManager initialized.");
     }
 
@@ -24,45 +29,29 @@ public class TurnManager : MonoBehaviour, IManager
         currentTurn++;
         Debug.Log($"Turn {currentTurn} started.");
 
-        // Apply ongoing effects from location cards here if you prefer:
-        if (locationDeckManager != null)
+        // Reset any dice used last turn so they can be used again
+        foreach (var dice in dicePoolManager.dicePool)
         {
-            locationDeckManager.ApplyOngoingEffects(resourceManager, /* populationResource */ null);
-        }
-    }
+            dice.IsUsedThisTurn = false;
+            dice.IsAssignedToSlot = false;
 
-//TO DO - come back to this and refactor when locations are done and dice slots should be easier to find than by findobjectoftype
+            if (dice.UIContainerObject != null)
+            {
+                dice.UIContainerObject.SetActive(false);
+            }
+        }
+
+        // We do NOT apply location ongoing effects here, we do it at EndTurn
+    }
+    
     public void EndTurn()
     {
-        foreach (var slot in FindObjectsOfType<DiceSlot>())
-        {
-            if(slot.isRequirementFulfilled) 
-                continue;
+        Debug.Log($"Ending turn {currentTurn}...");
 
-            bool requirementMet = false;
-            if(slot.GetCurrentDice() != null)
-            {
-                var diceUI = slot.GetCurrentDice().GetComponent<DiceUI>();
-                if(diceUI != null && diceUI.dataReference != null)
-                {
-                    requirementMet = slot.CanAcceptDice(diceUI.dataReference);
-                }
-            }
+        // 1) Check all location dice slots and finalize them
+        locationDeckManager.CheckAllSlotsOnActiveCards();
 
-            if(requirementMet)
-            {
-                if(slot.requirementsImage != null) slot.requirementsImage.enabled = false;
-                if(slot.fulfilledImage != null) slot.fulfilledImage.enabled = true;
-                slot.isRequirementFulfilled = true;
-            }
-            else
-            {
-                if(slot.requirementsImage != null) slot.requirementsImage.enabled = true;
-                if(slot.fulfilledImage != null) slot.fulfilledImage.enabled = false;
-                slot.isRequirementFulfilled = false;
-            }
-        }
-
+        // 2) Optionally reset dice UI positions
         foreach (var dice in dicePoolManager.dicePool)
         {
             if(dice.UIContainerObject != null)
@@ -72,23 +61,33 @@ public class TurnManager : MonoBehaviour, IManager
                 {
                     draggable.ResetToOriginalParent();
                 }
-                dice.IsAssignedToSlot = false;
                 dice.UIContainerObject.SetActive(false);
+                dice.IsAssignedToSlot = false;
+                dice.IsUsedThisTurn = false;
             }
         }
 
-        // Check if any location cards were fulfilled this turn
-        // awarding gold or spawning new cards
+        // 3) Clear temporary dice
+        dicePoolManager.ClearTemporaryDice();
+
+        // 4) Apply ongoing effects to incomplete locations
+        //    e.g. reduce population
         if (locationDeckManager != null)
         {
-            // Let's assume 'foodResource' is not relevant, so let's also define a 'goldResource' for simplicity
-            // For demonstration, let's pass in resourceManager.GetResourceSOByName("Gold") or something similar
-            // Or just create a public field in TurnManager referencing a gold ResourceSO
-            locationDeckManager.CheckCardResolutions(resourceManager, /* goldResource */ null);
+            locationDeckManager.ApplyOngoingEffects(resourceManager, populationResource);
+
+            // 5) Now check if any card is fully completed and give gold
+            //    This method is expecting to get goldResource as well
+            //NOTE cards should rather reward gold immediately not here
+            //locationDeckManager.CheckCardResolutions(resourceManager, goldResource);
         }
 
-        dicePoolManager.ClearTemporaryDice();
+        // Step X: For each skill in your skillManager, clear its slots
+        if (skillManager != null)
+        {
+            skillManager.ClearAllSkillSlots();
+        }
+
         Debug.Log($"Turn {currentTurn} ended.");
     }
-
 }

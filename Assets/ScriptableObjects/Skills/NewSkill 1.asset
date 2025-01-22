@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af4a9b8d96bc4c46b4559bf3686fb6e, type: 3}
+  m_Name: NewSkill 1
+  m_EditorClassIdentifier: 
+  skillName: Skill 2
+  skillDescription: Add 1 to all odd white dice
+  diceSlotCount: 2
+  slotRestrictions:
+  - {fileID: 11400000, guid: 5ae5101706b25a9408b855f6c21024d4, type: 2}
+  - {fileID: 11400000, guid: 3e444e46383e7be47925f6c0d4497ad2, type: 2}
+  createNewDice: 0
+  newDiceColor: {fileID: 0}
+  newDiceFaceValue: 0
+  affectAllDice: 0
+  affectOnlyColor: 1
+  colorToAffect: {fileID: 11400000, guid: 122dd09f20ca5c54e9d30b69b96321f3, type: 2}
+  affectOnlyOdds: 1
+  affectOnlyEvens: 0
+  pipChange: 1

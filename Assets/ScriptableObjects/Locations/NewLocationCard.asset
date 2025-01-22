@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: NewLocationCard
   m_EditorClassIdentifier: 
   locationName: 
-  description: 
+  description: 'End Turn: -1 population
+
+    Completed: 5 coins'
   frontSprite: {fileID: 0}
   backSprite: {fileID: 0}
-  goldReward: 0
-  hasOngoingEffect: 0
-  ongoingEffectAmount: 0
+  goldReward: 5
+  hasOngoingEffect: 1
+  ongoingEffectAmount: 1
   numberOfDiceSlots: 6
   slotRestrictions:
   - {fileID: 11400000, guid: 3e444e46383e7be47925f6c0d4497ad2, type: 2}

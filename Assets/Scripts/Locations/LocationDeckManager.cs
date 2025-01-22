@@ -19,6 +19,11 @@ public class LocationDeckManager : MonoBehaviour, IManager
     [Range(1, 4)]
     public int maxActiveCards = 4;
 
+    [Header("Stage Settings")]
+    public bool useStages = true; // If you want to turn on/off stage-based flow
+    public int currentStage = 1;
+    public int cardsPerStage = 4; // how many cards appear per stage
+
     private List<LocationCardUI> activeCardUIs = new List<LocationCardUI>();
 
     public delegate void CardResolvedHandler(LocationCardSO cardData);
@@ -36,7 +41,34 @@ public class LocationDeckManager : MonoBehaviour, IManager
 
     public void PopulateInitialCards()
     {
-        for (int i = 0; i < maxActiveCards; i++)
+        // If you're using stage-based flow, we only spawn `cardsPerStage` for the first stage:
+        // Otherwise, if not using stage flow, we can do the old approach of spawning maxActiveCards.
+        if (useStages)
+        {
+            SpawnStage(currentStage);
+        }
+        else
+        {
+            // old approach
+            for (int i = 0; i < maxActiveCards; i++)
+            {
+                if (deckIndex < locationDeck.Count)
+                {
+                    SpawnNextCard();
+                }
+            }
+        }
+    }
+
+    // This spawns 4 new cards (or however many you define per stage)
+    private void SpawnStage(int stageNumber)
+    {
+        // Clear out any existing cards first if you want them gone
+        // (or if you want them to remain on screen, skip this)
+        ClearCurrentCards();
+
+        // Spawn the next set of cards from the deck
+        for (int i = 0; i < cardsPerStage; i++)
         {
             if (deckIndex < locationDeck.Count)
             {
@@ -44,7 +76,6 @@ public class LocationDeckManager : MonoBehaviour, IManager
             }
         }
     }
-
     private void SpawnNextCard()
     {
         if (deckIndex >= locationDeck.Count)
@@ -71,44 +102,107 @@ public class LocationDeckManager : MonoBehaviour, IManager
 
     public void CheckCardResolutions(ResourceManager resourceManager, ResourceSO goldResource)
     {
-        List<LocationCardUI> resolvedCards = new List<LocationCardUI>();
-
+        // Reward or flip each card if fully resolved:
         foreach (var cardUI in activeCardUIs)
         {
             if (cardUI.IsCardFulfilled())
             {
+                // reward, flip, etc.
                 if (resourceManager != null && goldResource != null)
                 {
                     resourceManager.AddResource(goldResource, cardUI.cardData.goldReward);
                 }
-
                 OnCardResolved?.Invoke(cardUI.cardData);
 
-                resolvedCards.Add(cardUI);
+                cardUI.ShowFront(false);
             }
         }
 
-        foreach (var resolvedCard in resolvedCards)
+        // Now check if *all* are resolved
+        bool allResolved = true;
+        foreach (var cardUI in activeCardUIs)
         {
-            activeCardUIs.Remove(resolvedCard);
-            Destroy(resolvedCard.gameObject);
+            if (!cardUI.IsCardFulfilled())
+            {
+                allResolved = false;
+                break;
+            }
         }
 
-        while (activeCardUIs.Count < maxActiveCards && deckIndex < locationDeck.Count)
+        // If stage-based flow is on, and indeed all are resolved...
+        if (useStages && allResolved)
         {
-            SpawnNextCard();
+            Debug.Log($"Stage {currentStage} all resolved. Moving to next stage!");
+            currentStage++;
+            SpawnStage(currentStage);
         }
+    }
+
+    // If you want to remove the old cards from the screen
+    // before spawning the next stage:
+    private void ClearCurrentCards()
+    {
+        foreach (var cardUI in activeCardUIs)
+        {
+            Destroy(cardUI.gameObject);
+        }
+        activeCardUIs.Clear();
     }
 
     public void ApplyOngoingEffects(ResourceManager resourceManager, ResourceSO populationResource)
     {
         foreach (var cardUI in activeCardUIs)
         {
-            var data = cardUI.cardData;
-            if (data.hasOngoingEffect && resourceManager != null && populationResource != null)
+            // Only affect cards that are NOT fully fulfilled yet
+            if (!cardUI.IsCardFulfilled())
             {
-                resourceManager.DeductResource(populationResource, data.ongoingEffectAmount);
+                var data = cardUI.cardData;
+                if (data.hasOngoingEffect && resourceManager != null && populationResource != null)
+                {
+                    resourceManager.DeductResource(populationResource, data.ongoingEffectAmount);
+                    Debug.Log($"Applying {data.ongoingEffectAmount} ongoing effect from card: {data.locationName} on population resource.");
+                }
             }
         }
     }
+
+    public void CheckAllSlotsOnActiveCards()
+    {
+        // For each card in the active list
+        foreach (var cardUI in activeCardUIs)
+        {
+            // For each slot in that card
+            foreach (var slot in cardUI.GetSlots())
+            {
+                // If the slot is already fulfilled, skip it
+                if (slot.isRequirementFulfilled)
+                    continue;
+
+                bool requirementMet = false;
+                // Check if there's a dice currently assigned
+                var diceGO = slot.GetCurrentDice();
+                if (diceGO != null)
+                {
+                    var diceUI = diceGO.GetComponent<DiceUI>();
+                    if (diceUI != null && diceUI.dataReference != null)
+                    {
+                        // Use the slot's own restriction to check if the dice meets the requirement
+                        requirementMet = slot.CanAcceptDice(diceUI.dataReference);
+                    }
+                }
+
+                // If requirement is met now, mark the slot as fulfilled (visually + logically)
+                if (requirementMet)
+                {
+                    slot.FulfillSlotVisuals();
+                }
+                else
+                {
+                    // If it's not met, ensure the slot visuals are not showing "fulfilled"
+                    slot.UnfulfillSlotVisuals();
+                }
+            }
+        }
+    }
+
 }

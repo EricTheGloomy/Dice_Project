@@ -28,7 +28,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if(requirementsImage != null)
         {
             requirementsImage.enabled = true;
-            // If a slot restriction exists and has a sprite, use it.
             if(slotRestriction != null && slotRestriction.requirementSprite != null)
             {
                 requirementsImage.sprite = slotRestriction.requirementSprite;
@@ -43,10 +42,6 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         }
     }
 
-    /// <summary>
-    /// Sets the slot restriction data and updates the requirement text and visuals.
-    /// Call this when instantiating the slot or changing its restriction.
-    /// </summary>
     public void SetRestriction(DiceSlotRestrictionSO newRestriction)
     {
         slotRestriction = newRestriction;
@@ -84,13 +79,11 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Optional: Highlight the slot or provide feedback
         Debug.Log("Pointer entered the dice slot.");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Optional: Remove highlight or feedback
         Debug.Log("Pointer exited the dice slot.");
     }
 
@@ -147,7 +140,32 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         // Mark the dice as assigned
         diceData.IsAssignedToSlot = true;
 
+        // Mark this slot as fulfilled 
+        isRequirementFulfilled = true;
+        FulfillSlotVisuals();
+        diceObj.SetActive(false);
+
         Debug.Log($"Dice {diceObj.name} assigned to slot {gameObject.name}, new parent: {diceObj.transform.parent.name}");
+
+        // Once the final slot is fulfilled, check if the entire location is done
+        var locationCardUI = GetComponentInParent<LocationCardUI>();
+        if (locationCardUI != null && locationCardUI.IsCardFulfilled())
+        {
+            // Find the TurnManager (or ResourceManager) in the scene
+            TurnManager turnManager = FindObjectOfType<TurnManager>();
+            ResourceManager rm = FindObjectOfType<ResourceManager>();
+
+            // If found, award gold
+            if (turnManager != null && rm != null && turnManager.goldResource != null)
+            {
+                rm.AddResource(turnManager.goldResource, locationCardUI.cardData.goldReward);
+                Debug.Log($"Immediate awarding {locationCardUI.cardData.goldReward} gold for completing {locationCardUI.cardData.locationName}!");
+            }
+
+            // Optionally hide or flip the location
+            locationCardUI.ShowFront(false);
+        }
+
         return true;
     }
 
@@ -160,8 +178,8 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             {
                 diceUI.dataReference.IsAssignedToSlot = false;
             }
-
             currentDice = null;
+
             Debug.Log($"Slot {gameObject.name} cleared.");
         }
     }
@@ -169,5 +187,51 @@ public class DiceSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public GameObject GetCurrentDice()
     {
         return currentDice;
+    }
+
+    public void FulfillSlotVisuals()
+    {
+        isRequirementFulfilled = true;
+        
+        // Hide the requirement text
+        if (requirementDescriptionText != null)
+        {
+            requirementDescriptionText.gameObject.SetActive(false);
+        }
+
+        // Hide the requirement sprite
+        if (requirementsImage != null)
+        {
+            requirementsImage.enabled = false;
+        }
+
+        // Show the fulfilled sprite
+        if (fulfilledImage != null)
+        {
+            fulfilledImage.enabled = true;
+        }
+    }
+
+    public void UnfulfillSlotVisuals()
+    {
+        isRequirementFulfilled = false;
+        
+        // Show requirement text
+        if (requirementDescriptionText != null)
+        {
+            requirementDescriptionText.gameObject.SetActive(true);
+        }
+
+        // Show requirement sprite
+        if (requirementsImage != null)
+        {
+            requirementsImage.enabled = true;
+        }
+
+        // Hide the fulfilled sprite
+        if (fulfilledImage != null)
+        {
+            fulfilledImage.enabled = false;
+        }
     }
 }

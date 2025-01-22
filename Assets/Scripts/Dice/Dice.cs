@@ -12,6 +12,9 @@ public class Dice : IDice
 
     public bool IsAssignedToSlot { get; set; }
 
+    // NEW: Mark this dice as used for this turn, preventing re-roll
+    public bool IsUsedThisTurn { get; set; }
+
     private DiceFaceSO[] diceFaces;
 
     public Dice(DiceColorSO color, DiceFaceSO[] faces, bool isPermanent = false)
@@ -21,5 +24,8 @@ public class Dice : IDice
         CurrentValue = Random.Range(1, diceFaces.Length + 1);
         IsPermanent = isPermanent;
         IsAssignedToSlot = false;
+
+        // Defaults
+        IsUsedThisTurn = false;
     }
 }
